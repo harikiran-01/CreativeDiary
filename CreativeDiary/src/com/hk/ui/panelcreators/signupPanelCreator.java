@@ -29,7 +29,6 @@ public class signupPanelCreator {
 	private JPanel signupPanel =  new JPanel();
 	private JTextField userName;
 	private JPasswordField passwordField;
-	char[] correctPass = new char[] {'a', 'd', 'a', 'd'};
 	private JButton register;
 	private JLabel ulabel,plabel,doblabel;
 	
