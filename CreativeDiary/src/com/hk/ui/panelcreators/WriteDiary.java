@@ -18,28 +18,53 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class WriteDiary{
+	private static int changecount=0;
 	private UserProfile user = CurrentUser.getInstance();
-	private Date currentDate = new Date();
-	private CustomDate selectedDate = null;
-	private String content;
-	private JPanel writeDiaryPanel;
-	JLabel dayinfo = new JLabel("");
-	JDateChooser dateChooser = new JDateChooser();
-	PropertyChangeListener lis = new PropertyChangeListener(){
+	private static Date currentDate = new Date();
+	public static CustomDate selectedDate = DateConverter.convertDate(currentDate);
+	private static String filename = StorageSpace.currentpath+CurrentUser.getInstance().getUserName()+"\\"+
+            Integer.toString(selectedDate.getYear())+"\\"
+	          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
+	private static String content="";
+	private static JPanel writeDiaryPanel = null;
+	static JLabel dayinfo = new JLabel("");
+	static JTextArea contentfield = new JTextArea("");
+	public static JDateChooser dateChooser = new JDateChooser();
+	
+	private static PropertyChangeListener lis = new PropertyChangeListener(){
 	      @Override
 	      public void propertyChange(PropertyChangeEvent e) {
 	    	    if(dateBoundary(dateChooser))	{
+	    	    	changecount++;
+	    	    	selectedDate = DateConverter.convertDate(dateChooser);
+	    	    	filename = StorageSpace.currentpath+CurrentUser.getInstance().getUserName()+"\\"+
+	    	                Integer.toString(selectedDate.getYear())+"\\"
+	    	    	          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
+	    	    	if(isAlreadyWritten())
+	    	    	{
+	    	    	try {
+						contentfield.setText(ReadDiary.getContentFromFile(selectedDate.getDay(), selectedDate.getMonth(), selectedDate.getYear()));
+						if(changecount%2==0)
+							readOrEditDialog();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+	    	    	}
+	    	    	else
+	    	    	{
+		    	    	System.out.print("fired\t");
+	    	    	contentfield.setText("Start writing here");
 				    dayinfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()));
-				    selectedDate = DateConverter.convertDate(dateChooser);
+				    
+	    	    	}
 				}
 				else {
-					updateDateChooser();
+					updateDateChooser(selectedDate);
 				}
 	      }      
 	    };
 	public WriteDiary(){
 	writeDiaryPanel = new JPanel();
-	selectedDate = DateConverter.convertDate(currentDate);
 	//welcome user
 	JLabel lblWelcomeUser = new JLabel("Welcome "+user.getUserName().toUpperCase());
 	lblWelcomeUser.setFont(new Font("Script MT Bold", Font.PLAIN, 20));
@@ -57,7 +82,6 @@ public class WriteDiary{
 	dayinfo.setBounds(22, 61, 286, 14);
 	dayinfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(currentDate));
 	//content field
-	JTextArea contentfield = new JTextArea("Start writing here");
 	JScrollPane contentscroll = new JScrollPane(contentfield);
 	contentfield.addFocusListener(new FocusAdapter() {
 		@Override
@@ -111,8 +135,22 @@ public class WriteDiary{
 
 	}
 	
+	protected static boolean isAlreadyWritten() {
+		File f = new File(filename);
+		System.out.println(filename);
+		if(f.length()!=0)
+		{
+			System.out.println(" file exists ");
+			return true;
+		}
+		else{
+			System.out.println(" file does not ");
+			return false;
+		}
+	}
+
 	private void EncryptFile() throws IOException {
-		String filename = StorageSpace.currentpath+CurrentUser.getInstance().getUserName()+"\\"+
+		filename = StorageSpace.currentpath+CurrentUser.getInstance().getUserName()+"\\"+
 	                      Integer.toString(selectedDate.getYear())+"\\"
 				          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
 		File f = new File(filename);
@@ -122,7 +160,7 @@ public class WriteDiary{
 	    outputStream.close();
 	}
 	
-	public boolean dateBoundary(JDateChooser dateChooser) {
+	public static boolean dateBoundary(JDateChooser dateChooser) {
 		Object[] option = {"I get it","My Bad!"};
 		if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(currentDate))) {
 			return true;
@@ -143,14 +181,28 @@ public class WriteDiary{
 		return true;
 	}
 	
-	public void updateDateChooser() {
+	public static void updateDateChooser(CustomDate date) {
 	    dateChooser.removePropertyChangeListener(lis);
-		dateChooser.setDate(DateConverter.convertfromCustom(selectedDate));
+		dateChooser.setDate(DateConverter.convertfromCustom(date));
 		dateChooser.addPropertyChangeListener(lis);
 		}
 
-	public JPanel returnPanel() {
-	return this.writeDiaryPanel;
+	public JPanel getPanel() {
+	return writeDiaryPanel;
+	}
+	
+	public static void readOrEditDialog() {
+		Object[] option = {"Read","Edit"};
+		JOptionPane.showOptionDialog(HomePage.getFrame(),"We strongly believe you can't know your future",
+				"",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,option,option[0]);
+	}
+	
+	public static void updateEditFields(CustomDate searchDate, String excontent ) {
+		System.out.println("entered updatefields");
+		System.out.println("search date is"+searchDate.getDay()+"/"+searchDate.getMonth()+"/"+searchDate.getYear());
+		updateDateChooser(searchDate);
+		selectedDate = DateConverter.convertDate(WriteDiary.dateChooser);
+		contentfield.setText(excontent);
 	}
 	
 }

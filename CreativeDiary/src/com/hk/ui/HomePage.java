@@ -12,7 +12,11 @@ import java.awt.Font;
 
 public class HomePage{
 	private static JFrame creativeDiary = new JFrame("Creative Diary");
-	JPanel menupanel,diaryContainerPanel,writeDiaryPanel,readDiaryPanel;
+	public static WriteDiary write = new WriteDiary();
+	public static ReadDiary read = new ReadDiary();
+	private JPanel writeDiaryPanel = write.getPanel();
+	private JPanel readDiaryPanel = read.getPanel();
+	private static JPanel menupanel, diaryContainerPanel;
 		public HomePage() {
 				creativeDiary.getContentPane().setLayout(null);
 				//menu panel
@@ -66,11 +70,9 @@ public class HomePage{
 				diaryContainerPanel.add(welcomepanel, "welcomepanel");
 				
 				//write diary panel
-				writeDiaryPanel = new JPanel();
-				writeDiaryPanel = new WriteDiary().returnPanel();
-				//read diary panel
-				readDiaryPanel = new JPanel();	
-				readDiaryPanel = new ReadDiary().returnPanel();
+				writeDiaryPanel = new WriteDiary().getPanel();
+				//read diary panel	
+				readDiaryPanel = new ReadDiary().getPanel();
 				
 				
 				creativeDiary.getContentPane().add(diaryContainerPanel);
@@ -80,7 +82,7 @@ public class HomePage{
 				creativeDiary.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}
 		
-		public void replacePanel(JPanel replace) {
+		public static void replacePanel(JPanel replace) {
 			diaryContainerPanel.removeAll();
 			diaryContainerPanel.repaint();
 			diaryContainerPanel.revalidate();

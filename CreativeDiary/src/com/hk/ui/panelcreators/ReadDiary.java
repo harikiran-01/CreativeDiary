@@ -5,7 +5,10 @@ import javax.swing.JTextArea;
 
 import com.hk.components.CurrentDay;
 import com.hk.components.CurrentUser;
+import com.hk.components.CustomDate;
 import com.hk.components.StorageSpace;
+import com.hk.ui.HomePage;
+
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -83,6 +86,9 @@ public class ReadDiary{
 		readDiaryPanel.add(contentscroll);
 		
 		JButton btnSet = new JButton("SEARCH");
+		JButton btnEdit = new JButton("EDIT");
+		btnEdit.setVisible(false);
+		CustomDate searchdate = new CustomDate(0,0,0);
 		btnSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String content="";
@@ -92,23 +98,17 @@ public class ReadDiary{
 				try {
 					if(new File(filename).exists())
 					{
-						System.out.println(filename);
-				BufferedReader reader = new BufferedReader(new FileReader(filename));
-				StringBuilder stringBuilder = new StringBuilder();
-				String line = null;
-				String ls = System.getProperty("line.separator");
-				while ((line = reader.readLine()) != null) {
-					stringBuilder.append(line);
-					stringBuilder.append(ls);
-				}
-				// delete the last new line separator
-				stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-				reader.close();
-				content = stringBuilder.toString();
+						searchdate.setDay(Integer.parseInt(daySelector.getSelectedItem().toString()));
+						searchdate.setMonth(Integer.parseInt(monthSelector.getSelectedItem().toString()));
+						searchdate.setYear(Integer.parseInt(yearSelector.getSelectedItem().toString()));
+						content = getContentFromFile(searchdate.getDay(), searchdate.getMonth(), searchdate.getYear());
+						btnEdit.setVisible(true);
 					}
-				else
+				else {
+					btnEdit.setVisible(false);
 					content = "Content not found";
-					contentField.setText(content);
+				}
+					contentField.setText(content.trim());
 					contentField.setCaretPosition(0);
 			}
 			catch(IOException ex) {
@@ -117,6 +117,16 @@ public class ReadDiary{
 		});
 		btnSet.setBounds(297, 21, 89, 23);
 		readDiaryPanel.add(btnSet);
+		
+		//edit button
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				HomePage.replacePanel(HomePage.write.getPanel());
+				WriteDiary.updateEditFields(searchdate, contentField.getText().trim());
+			}
+		});
+		btnEdit.setBounds(297, 44, 89, 23);
+		readDiaryPanel.add(btnEdit);
 	
 	}
 	
@@ -127,7 +137,33 @@ public class ReadDiary{
 			k++;}
 	}
 	
-	public JPanel returnPanel() {
-		return this.readDiaryPanel;
+	public JPanel getPanel() {
+		return readDiaryPanel;
 	}
+	
+	public static String getContentFromFile(int day,int month,int year) throws IOException {
+		String filename = StorageSpace.currentpath+CurrentUser.getInstance().getUserName()+"\\"+
+                Integer.toString(year)+"\\"
+		          +Integer.toString(month)+"\\"+Integer.toString(day)+".txt";
+		if(new File(filename).exists())
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			StringBuilder stringBuilder = new StringBuilder();
+			String line = null;
+			String ls = System.getProperty("line.separator");
+			while ((line = reader.readLine()) != null) {
+				stringBuilder.append(line);
+				stringBuilder.append(ls);
+			}
+			// deleting the last new line separator
+			stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+			reader.close();
+			return stringBuilder.toString().trim();
+		}
+		else
+			return null;
+	}
+	
+	
+	
 }

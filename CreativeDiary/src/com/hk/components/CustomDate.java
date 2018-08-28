@@ -41,5 +41,5 @@ public class CustomDate implements Serializable{
 	public int getYear() {
 		return this.year;
 	}
-
 }
+
