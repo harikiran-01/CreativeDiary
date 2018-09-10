@@ -104,6 +104,7 @@ public void storeUser(List<UserProfile> users) {
              ObjectOutputStream out = new ObjectOutputStream(file);
              if(users==null)
              out.reset();
+             
 			 out.writeObject(users);
 			 //closing streams
 			 out.close();

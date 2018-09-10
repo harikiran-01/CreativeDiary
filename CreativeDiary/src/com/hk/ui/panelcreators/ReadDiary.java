@@ -122,7 +122,7 @@ public class ReadDiary{
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				HomePage.replacePanel(HomePage.write.getPanel());
-				WriteDiary.updateEditFields(searchdate, contentField.getText().trim());
+				HomePage.write.updateEditFields(searchdate, contentField.getText().trim());
 			}
 		});
 		btnEdit.setBounds(297, 44, 89, 23);
@@ -163,7 +163,4 @@ public class ReadDiary{
 		else
 			return null;
 	}
-	
-	
-	
 }
