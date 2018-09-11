@@ -4,7 +4,6 @@ import com.hk.components.*;
 import com.hk.ui.HomePage;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -16,34 +15,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class WriteDiary{
-	private boolean samepage = true;
-	private UserProfile user = CurrentUser.getInstance();
-	private Date currentDate = new Date();
-	public CustomDate selectedDate = DateConverter.convertDate(currentDate);
+	private UserProfile currentuser = CurrentUser.getInstance();
 	private String content="";
-	private JPanel writeDiaryPanel = null;
-	private JLabel dayinfo = new JLabel("");
-	private JTextArea contentfield = new JTextArea("Start writing here");
-	private JDateChooser dateChooser = new JDateChooser(currentDate);	
-	public WriteDiary(){
-	writeDiaryPanel = new JPanel();
-	//welcome user
-	JLabel lblWelcomeUser = new JLabel("Welcome "+user.getUserName().toUpperCase());
-	lblWelcomeUser.setFont(new Font("Script MT Bold", Font.PLAIN, 20));
-	lblWelcomeUser.setBounds(22, 9, 179, 21);
-	//pick date label
-	JLabel lblPickDate = new JLabel("Pick Date:");
-	lblPickDate.setFont(new Font("Viner Hand ITC", Font.PLAIN, 16));
-	lblPickDate.setBounds(252, 9, 81, 25);
+	private JPanel writeDiaryPanel;
+	private JLabel greetMessage,dayInfo,lblPickDate;
+	private JTextArea contentfield;
+	private JScrollPane contentscroll;
+	private JDateChooser dateChooser;
+	public CustomDate selectedDate = new CustomDate(0, 0, 0);
+public WriteDiary(){
+	initComponents();
 	writeDiaryPanel.add(lblPickDate);
-	//date chooser
-	dateChooser.setDateFormatString("dd MM yyyy");
-	dateChooser.setBounds(343, 9, 91, 20);
-	//day info
-	dayinfo.setBounds(22, 61, 286, 14);
-	dayinfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(currentDate));
-	//content field
-	JScrollPane contentscroll = new JScrollPane(contentfield);
 	contentfield.addFocusListener(new FocusAdapter() {
 		@Override
 		public void focusGained(FocusEvent arg0) {
@@ -56,31 +38,30 @@ public class WriteDiary{
 				contentfield.setText("Start writing here");
 		}
 	});
-	contentfield.setWrapStyleWord(true);
-	contentfield.setLineWrap(true);
-	contentscroll.setBounds(10,96, 508, 334);
 	//set button
 	JButton setdate = new JButton("SET");
 	setdate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			if(dateBoundary()) {
-				if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(selectedDate))))
-					samepage= true;
-				else
-					samepage= false;
+				contentfield.setEnabled(true);
+				boolean firstvisit = true;
+				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(selectedDate)));
 				selectedDate = DateConverter.convertDate(dateChooser);
-				if(!samepage && isAlreadyWritten())
+				if(!samepage && firstvisit) {
+					firstvisit = false;
+				if(isAlreadyWritten())
 				{
 					try {
-						updateEditFields(selectedDate, ReadDiary.getContentFromFile(selectedDate.getDay(), selectedDate.getMonth(), selectedDate.getYear()));
+						updateEditFields(selectedDate, HomePage.read.getContentFromFile(selectedDate));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				else if(!samepage){
+				else{
 					contentfield.setText("Start writing here");
-					dayinfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(selectedDate)));
+					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(selectedDate)));
+				}
 				}
 			}
 			else {
@@ -98,8 +79,8 @@ public class WriteDiary{
 	writeDiaryPanel.add(contentscroll);
 	writeDiaryPanel.add(save);
 	writeDiaryPanel.add(dateChooser);
-	writeDiaryPanel.add(lblWelcomeUser);
-	writeDiaryPanel.add(dayinfo);	
+	writeDiaryPanel.add(greetMessage);
+	writeDiaryPanel.add(dayInfo);	
 	writeDiaryPanel.add(setdate);
 	
 	save.addActionListener(new ActionListener() {
@@ -127,6 +108,33 @@ public class WriteDiary{
 
 	}
 
+	private void initComponents() {
+		writeDiaryPanel = new JPanel();
+		//welcome user
+		greetMessage = new JLabel("Welcome "+currentuser.getUserName().toUpperCase());
+		greetMessage.setFont(new Font("Script MT Bold", Font.PLAIN, 20));
+		greetMessage.setBounds(22, 9, 179, 21);
+		//pick date label
+		lblPickDate = new JLabel("Pick Date:");
+		lblPickDate.setFont(new Font("Viner Hand ITC", Font.PLAIN, 16));
+		lblPickDate.setBounds(252, 9, 81, 25);
+		//date chooser
+		dateChooser = new JDateChooser(CurrentDay.getDate());	
+		dateChooser.setDateFormatString("dd MM yyyy");
+		dateChooser.setBounds(343, 9, 91, 20);
+		//day info
+		dayInfo = new JLabel("Click SET to select the date");
+		dayInfo.setBounds(22, 61, 286, 14);
+		//content field
+		contentfield = new JTextArea("Start writing here");
+		contentfield.setWrapStyleWord(true);
+		contentfield.setLineWrap(true);
+		contentfield.setEnabled(false);
+		//content scrollpane
+		contentscroll = new JScrollPane(contentfield);
+		contentscroll.setBounds(10,96, 508, 334);
+	}
+
 	private void EncryptFile() throws IOException {
 		File f = new File(reviseFileName());
 		f.getParentFile().mkdirs();
@@ -136,25 +144,25 @@ public class WriteDiary{
 	}
 	
 	public String reviseFileName() {
-		return StorageSpace.currentpath+CurrentUser.getInstance().getUserName()+"\\"+
+		return StorageSpace.currentpath+currentuser.getUserName()+"\\"+
                 Integer.toString(selectedDate.getYear())+"\\"
 		          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
 	}
 	
 	public boolean dateBoundary() {
 		Object[] option = {"I get it","My Bad"};
-		if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(currentDate))) {
+		if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(CurrentDay.getDate()))) {
 			return true;
 		}
-		else if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(CurrentUser.getInstance().getDob())))) {
+		else if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(currentuser.getDob())))) {
 			return true;
 		}
-		else if(dateChooser.getDate().after(currentDate)) {
+		else if(dateChooser.getDate().after(CurrentDay.getDate())) {
 			JOptionPane.showOptionDialog(HomePage.getFrame(),"We strongly believe you can't know your future",
 					"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
 			return false;
 		}	
-		else if(dateChooser.getDate().before(DateConverter.convertfromCustom(CurrentUser.getInstance().getDob()))){
+		else if(dateChooser.getDate().before(DateConverter.convertfromCustom(currentuser.getDob()))){
 			JOptionPane.showOptionDialog(HomePage.getFrame(),"Well we don't see those dates in your life",
 					"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
 			return false;
@@ -168,7 +176,7 @@ public class WriteDiary{
 	
 	public void updateEditFields(CustomDate searchDate, String excontent) {
 		dateChooser.setDate(DateConverter.convertfromCustom(searchDate));
-		dayinfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(searchDate)));
+		dayInfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(searchDate)));
 		contentfield.setText(excontent);
 	}
 	
@@ -177,8 +185,12 @@ public class WriteDiary{
 		if(f.length()!=0)
 		{
 			Object[] option = {"Read","Edit"};
-			JOptionPane.showOptionDialog(HomePage.getFrame(),"You already updated diary for this day. Do you want to edit?",
+			int readoredit = JOptionPane.showOptionDialog(HomePage.getFrame(),"You already updated diary for this day. Do you want to edit?",
 					"",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,option,option[0]);
+			if(readoredit == 0) {
+				HomePage.replacePanel(HomePage.read.getPanel());
+				HomePage.read.updateFields(selectedDate);
+			}
 			return true;
 		}
 		else
