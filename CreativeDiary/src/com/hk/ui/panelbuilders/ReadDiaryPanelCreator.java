@@ -1,4 +1,4 @@
-package com.hk.ui.panelcreators;
+package com.hk.ui.panelbuilders;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -6,8 +6,6 @@ import com.hk.ui.HomePage;
 import com.toedter.calendar.JDateChooser;
 import com.hk.components.*;
 import javax.swing.JLabel;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,37 +14,20 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class ReadDiary{
-	JPanel readDiaryPanel;
-	ArrayList<String> shortmonths = new ArrayList<String>(Arrays.asList("4", "6", "9", "11"));
-	String[] days,months,years;
-	JLabel lblEnterDate;
-	JTextArea contentField;
-	JButton btnSearch, btnEdit;
-	CustomDate searchDate = null; 
-	JDateChooser dateChooser = new JDateChooser(CurrentDay.getDate());
-	public ReadDiary() {
-		readDiaryPanel = new JPanel();
-		readDiaryPanel.setLayout(null);
-		//pick date
-		lblEnterDate = new JLabel("Pick Date:");
-		lblEnterDate.setBounds(82, 25, 87, 14);
-		//date chooser
-		dateChooser.setBounds(142, 24, 122, 20);
-		//content Field
-		contentField = new JTextArea("hello, select a date to relive your memory");
-		JScrollPane contentscroll = new JScrollPane(contentField);
-		contentField.setBounds(10, 90, 430, 184);
-		contentField.setEditable(false);
-		contentField.setWrapStyleWord(true);
-		contentField.setLineWrap(true);
-		contentscroll.setBounds(10,96, 508, 334);
-		readDiaryPanel.add(lblEnterDate);
-		readDiaryPanel.add(contentscroll);
-		readDiaryPanel.add(dateChooser);
-		btnSearch = new JButton("SEARCH");
-		btnEdit = new JButton("EDIT");
-		btnEdit.setVisible(false);
+public class ReadDiaryPanelCreator{
+	private JPanel readDiaryPanel;
+	private JLabel lblEnterDate;
+	private JTextArea contentField;
+	private JScrollPane contentScroll;
+	private JButton btnSearch, btnEdit;
+	private CustomDate searchDate = null; 
+	private JDateChooser dateChooser = new JDateChooser(CurrentDay.getDate());
+	
+	public ReadDiaryPanelCreator() {
+		initComponents();
+		addComponents();
+		
+		//search button action
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				searchDate = DateConverter.convertDate(dateChooser);
@@ -64,29 +45,50 @@ public class ReadDiary{
 				System.out.println(ex);}
 			}
 		});
-		btnSearch.setBounds(297, 21, 95, 23);
-		readDiaryPanel.add(btnSearch);
-		//edit button
+		
+		//edit button action
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				HomePage.replacePanel(HomePage.write.getPanel());
 				HomePage.write.updateEditFields(searchDate, contentField.getText().trim());
 			}
-		});
+		});	
+	}
+
+	private void initComponents() {
+		//read diary panel
+		readDiaryPanel = new JPanel();
+		readDiaryPanel.setLayout(null);
+		//pick date label
+		lblEnterDate = new JLabel("Pick Date:");
+		lblEnterDate.setBounds(82, 25, 87, 14);
+		//date chooser
+		dateChooser.setBounds(142, 24, 122, 20);
+		//content Field
+		contentField = new JTextArea("hello, select a date to relive your memory");
+		contentField.setBounds(10, 90, 430, 184);
+		contentField.setEditable(false);
+		contentField.setWrapStyleWord(true);
+		contentField.setLineWrap(true);
+		//content scroll pane
+		contentScroll = new JScrollPane(contentField);
+		contentScroll.setBounds(10,96, 508, 334);
+		//search button
+		btnSearch = new JButton("SEARCH");
+		btnSearch.setBounds(297, 21, 95, 23);
+		//edit button
+		btnEdit = new JButton("EDIT");
+		btnEdit.setVisible(false);
 		btnEdit.setBounds(403, 21, 64, 23);
+	}
+	
+	
+	private void addComponents() {
+		readDiaryPanel.add(lblEnterDate);
+		readDiaryPanel.add(dateChooser);
+		readDiaryPanel.add(contentScroll);
+		readDiaryPanel.add(btnSearch);
 		readDiaryPanel.add(btnEdit);
-	
-	}
-	
-	public void fillValues(String[] arr,int begin,int end) {
-		int k=0;
-		for(int i=begin;i<end;i++) {
-			arr[k] = Integer.toString(i+1);
-			k++;}
-	}
-	
-	public JPanel getPanel() {
-		return readDiaryPanel;
 	}
 	
 	public String getContentFromFile(CustomDate date) throws IOException {
@@ -121,5 +123,9 @@ public class ReadDiary{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public JPanel getPanel() {
+		return readDiaryPanel;
 	}
 }

@@ -1,4 +1,4 @@
-package com.hk.ui.panelcreators;
+package com.hk.ui.panelbuilders;
 import javax.swing.*;
 import com.hk.components.*;
 import com.hk.ui.HomePage;
@@ -14,19 +14,23 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class WriteDiary{
+public class WriteDiaryPanelCreator{
 	private UserProfile currentuser = CurrentUser.getInstance();
 	private String content="";
 	private JPanel writeDiaryPanel;
 	private JLabel greetMessage,dayInfo,lblPickDate;
 	private JTextArea contentfield;
-	private JScrollPane contentscroll;
+	private JScrollPane contentScroll;
 	private JDateChooser dateChooser;
-	public CustomDate selectedDate = new CustomDate(0, 0, 0);
-public WriteDiary(){
-	initComponents();
-	writeDiaryPanel.add(lblPickDate);
-	contentfield.addFocusListener(new FocusAdapter() {
+	private CustomDate selectedDate;
+	private JButton save,setDate;
+	
+	public WriteDiaryPanelCreator(){
+		initComponents();
+		addComponents();
+		
+		//content field focus
+		contentfield.addFocusListener(new FocusAdapter() {
 		@Override
 		public void focusGained(FocusEvent arg0) {
 			if(contentfield.getText().equals("Start writing here"))
@@ -37,22 +41,31 @@ public WriteDiary(){
 			if(contentfield.getText().equals(""))
 				contentfield.setText("Start writing here");
 		}
-	});
-	//set button
-	JButton setdate = new JButton("SET");
-	setdate.addActionListener(new ActionListener() {
+	});	
+		
+	//set button action	
+	setDate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			if(dateBoundary()) {
 				contentfield.setEnabled(true);
-				boolean firstvisit = true;
 				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(selectedDate)));
+				CustomDate lastDate = selectedDate;
 				selectedDate = DateConverter.convertDate(dateChooser);
-				if(!samepage && firstvisit) {
-					firstvisit = false;
+				if(!samepage) {
 				if(isAlreadyWritten())
 				{
 					try {
+						int option = readOrEditDialog();
+						if(option==0) {
+							HomePage.replacePanel(HomePage.read.getPanel());
+							HomePage.read.updateFields(selectedDate);
+						}
+						else if(option==1)
 						updateEditFields(selectedDate, HomePage.read.getContentFromFile(selectedDate));
+						else {
+							selectedDate = lastDate;
+							dateChooser.setDate(DateConverter.convertfromCustom(selectedDate));
+						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -69,21 +82,9 @@ public WriteDiary(){
 			}
 		}
 	});
-	setdate.setBounds(444, 9, 74, 23);
-	//save button
-	JButton save = new JButton("SAVE");
-	save.setBounds(221, 441, 88, 23);
 	
-	writeDiaryPanel.setLayout(null);
-	writeDiaryPanel.setSize(528, 475);
-	writeDiaryPanel.add(contentscroll);
-	writeDiaryPanel.add(save);
-	writeDiaryPanel.add(dateChooser);
-	writeDiaryPanel.add(greetMessage);
-	writeDiaryPanel.add(dayInfo);	
-	writeDiaryPanel.add(setdate);
-	
-	save.addActionListener(new ActionListener() {
+	//save button action
+		save.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			content = contentfield.getText();
 			if(content.equals("") || content.equals("Start writing here"))
@@ -105,11 +106,11 @@ public WriteDiary(){
 			}
 		}
 	});
-
 	}
 
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
+		writeDiaryPanel.setLayout(null);
 		//welcome user
 		greetMessage = new JLabel("Welcome "+currentuser.getUserName().toUpperCase());
 		greetMessage.setFont(new Font("Script MT Bold", Font.PLAIN, 20));
@@ -122,6 +123,8 @@ public WriteDiary(){
 		dateChooser = new JDateChooser(CurrentDay.getDate());	
 		dateChooser.setDateFormatString("dd MM yyyy");
 		dateChooser.setBounds(343, 9, 91, 20);
+		//selected date
+		selectedDate = new CustomDate(0, 0, 0);
 		//day info
 		dayInfo = new JLabel("Click SET to select the date");
 		dayInfo.setBounds(22, 61, 286, 14);
@@ -130,23 +133,39 @@ public WriteDiary(){
 		contentfield.setWrapStyleWord(true);
 		contentfield.setLineWrap(true);
 		contentfield.setEnabled(false);
-		//content scrollpane
-		contentscroll = new JScrollPane(contentfield);
-		contentscroll.setBounds(10,96, 508, 334);
+		//content scroll pane
+		contentScroll = new JScrollPane(contentfield);
+		contentScroll.setBounds(10,96, 508, 334);
+		//set date button
+		setDate = new JButton("SET");
+		setDate.setBounds(444, 9, 74, 23);
+		//save button
+		save = new JButton("SAVE");
+		save.setBounds(221, 441, 88, 23);
 	}
-
-	private void EncryptFile() throws IOException {
-		File f = new File(reviseFileName());
-		f.getParentFile().mkdirs();
-		FileOutputStream outputStream = new FileOutputStream(reviseFileName());
-	    outputStream.write(content.getBytes());
-	    outputStream.close();
+	
+	private void addComponents() {
+		writeDiaryPanel.add(lblPickDate);
+		writeDiaryPanel.add(contentScroll);
+		writeDiaryPanel.add(save);
+		writeDiaryPanel.add(dateChooser);
+		writeDiaryPanel.add(greetMessage);
+		writeDiaryPanel.add(dayInfo);	
+		writeDiaryPanel.add(setDate);
 	}
 	
 	public String reviseFileName() {
 		return StorageSpace.currentpath+currentuser.getUserName()+"\\"+
                 Integer.toString(selectedDate.getYear())+"\\"
 		          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
+	}
+	
+	private void EncryptFile() throws IOException {
+		File f = new File(reviseFileName());
+		f.getParentFile().mkdirs();
+		FileOutputStream outputStream = new FileOutputStream(reviseFileName());
+	    outputStream.write(content.getBytes());
+	    outputStream.close();
 	}
 	
 	public boolean dateBoundary() {
@@ -169,31 +188,28 @@ public WriteDiary(){
 		}
 		return true;
 	}
-
-	public JPanel getPanel() {
-	return writeDiaryPanel;
+	
+	public boolean isAlreadyWritten() {
+		File f = new File(reviseFileName());
+		return f.length()!=0;
+	}
+	
+	public int readOrEditDialog() {
+		Object[] option = {"Read","Edit"};
+		return JOptionPane.showOptionDialog(HomePage.getFrame(),"You already updated diary for this day. Do you want to edit?",
+				"",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,option,option[0]);
 	}
 	
 	public void updateEditFields(CustomDate searchDate, String excontent) {
+		contentfield.setEnabled(true);
 		dateChooser.setDate(DateConverter.convertfromCustom(searchDate));
+		selectedDate = searchDate;
 		dayInfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(searchDate)));
 		contentfield.setText(excontent);
 	}
 	
-	public boolean isAlreadyWritten() {
-		File f = new File(reviseFileName());
-		if(f.length()!=0)
-		{
-			Object[] option = {"Read","Edit"};
-			int readoredit = JOptionPane.showOptionDialog(HomePage.getFrame(),"You already updated diary for this day. Do you want to edit?",
-					"",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,option,option[0]);
-			if(readoredit == 0) {
-				HomePage.replacePanel(HomePage.read.getPanel());
-				HomePage.read.updateFields(selectedDate);
-			}
-			return true;
+	
+	public JPanel getPanel() {
+		return writeDiaryPanel;
 		}
-		else
-			return false;
-	}
 }

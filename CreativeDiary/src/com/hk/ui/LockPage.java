@@ -1,8 +1,9 @@
 package com.hk.ui;
 import java.awt.CardLayout;
 import javax.swing.*;
-import com.hk.ui.panelcreators.loginPanelCreator;
-import com.hk.ui.panelcreators.signupPanelCreator;
+
+import com.hk.ui.panelbuilders.loginPanelCreator;
+import com.hk.ui.panelbuilders.signupPanelCreator;
 
 public class LockPage {
 	public static JFrame UserLogin = new JFrame("Creative Diary Login");
