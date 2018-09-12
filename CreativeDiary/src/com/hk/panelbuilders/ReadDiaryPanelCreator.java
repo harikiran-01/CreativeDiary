@@ -118,9 +118,9 @@ public class ReadDiaryPanelCreator{
 	public void updateFields(CustomDate findDate) {
 		btnEdit.setVisible(true);
 		searchDate = findDate;
-		dateChooser.setDate(DateConverter.convertfromCustom(findDate));
+		dateChooser.setDate(DateConverter.convertfromCustom(searchDate));
 		try {
-			contentField.setText(getContentFromFile(findDate));
+			contentField.setText(getContentFromFile(searchDate));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

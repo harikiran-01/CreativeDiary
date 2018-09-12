@@ -51,13 +51,6 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 			});
 
 }
-	
-private void addComponents() {
-	loginPanel.add(login);
-	loginPanel.add(load);
-	loginPanel.add(status);
-	load.setVisible(false);
-	}
 
 private void initComponents() {
 		//login panel
@@ -68,6 +61,13 @@ private void initComponents() {
 		status = new JLabel();
 		//progress bar
 		load = new JProgressBar(0,2);
+		load.setVisible(false);
+	}
+
+private void addComponents() {
+	loginPanel.add(login);
+	loginPanel.add(load);
+	loginPanel.add(status);
 	}
 
 	@Override

@@ -35,7 +35,6 @@ public abstract class AccessControls {
 	}
 
 	private void initComponents() {
-		System.out.println("entered");
 		//file
 		f = new File(filename);
 		//username label
