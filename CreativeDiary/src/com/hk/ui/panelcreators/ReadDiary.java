@@ -3,9 +3,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import com.hk.components.CurrentDay;
-import com.hk.components.CurrentUser;
-import com.hk.components.StorageSpace;
+import com.hk.components.*;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
