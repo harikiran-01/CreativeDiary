@@ -82,7 +82,7 @@ public void storeUser(List<UserProfile> users) {
         f.setReadOnly();
 	}
 
-	public JPanel returnPanel() {
+	public JPanel getPanel() {
 		return signupPanel;
 	}
 }

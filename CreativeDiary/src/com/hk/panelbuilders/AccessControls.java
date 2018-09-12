@@ -74,5 +74,7 @@ public abstract class AccessControls {
 			}
 			return true;
 	}
+	
+	public abstract JPanel getPanel();
 
 }

@@ -17,7 +17,7 @@ public class LockPage {
 		optionTab = new JTabbedPane();
 		UserLogin.add(optionTab);
 		optionTab.addTab("Log In", new loginPanelCreator().getPanel());
-		optionTab.addTab("Sign Up", new signupPanelCreator().returnPanel());		
+		optionTab.addTab("Sign Up", new signupPanelCreator().getPanel());		
 	}
 	
 	public static JFrame getFrame() {
