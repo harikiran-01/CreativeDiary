@@ -20,8 +20,8 @@ public class ReadDiaryPanelCreator{
 	private JTextArea contentField;
 	private JScrollPane contentScroll;
 	private JButton btnSearch, btnEdit;
-	private CustomDate searchDate = null; 
-	private JDateChooser dateChooser = new JDateChooser(CurrentDay.getDate());
+	private CustomDate searchDate; 
+	private JDateChooser dateChooser;
 	
 	public ReadDiaryPanelCreator() {
 		initComponents();
@@ -63,6 +63,8 @@ public class ReadDiaryPanelCreator{
 		lblEnterDate = new JLabel("Pick Date:");
 		lblEnterDate.setBounds(82, 25, 87, 14);
 		//date chooser
+		dateChooser = new JDateChooser(CurrentDay.getDate());
+		dateChooser.setSelectableDateRange(DateConverter.convertfromCustom(CurrentUser.getInstance().getDob()), CurrentDay.getDate());
 		dateChooser.setBounds(142, 24, 122, 20);
 		//content Field
 		contentField = new JTextArea("hello, select a date to relive your memory");

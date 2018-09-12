@@ -11,8 +11,6 @@ import javax.swing.JPanel;
 import com.hk.ui.HomePage;
 
 public class MenuPanelCreator {
-	private JPanel writeDiaryPanel = HomePage.write.getPanel();
-	private JPanel readDiaryPanel = HomePage.read.getPanel();
 	private JPanel menuPanel;
 	private JButton btnWriteDiary, btnReadDiary, btnExit;
 	public MenuPanelCreator() {
@@ -21,14 +19,14 @@ public class MenuPanelCreator {
 		//write button action
 		btnWriteDiary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				HomePage.replacePanel(writeDiaryPanel);
+				HomePage.replacePanel(HomePage.write.getPanel());
 			}
 		});
 		
 		//read diary action
 		btnReadDiary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				HomePage.replacePanel(readDiaryPanel);
+				HomePage.replacePanel(HomePage.read.getPanel());
 			}
 		});
 		

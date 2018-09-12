@@ -8,7 +8,6 @@ import com.hk.panelbuilders.signupPanelCreator;
 public class LockPage {
 	public static JFrame UserLogin = new JFrame("Creative Diary Login");
 	private static JTabbedPane optionTab;
-	
 	public static void main(String[] args) throws Exception {
 		UserLogin.setLayout(new CardLayout(0,0));
 		UserLogin.setVisible(true);
@@ -17,7 +16,7 @@ public class LockPage {
 		UserLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		optionTab = new JTabbedPane();
 		UserLogin.add(optionTab);
-		optionTab.addTab("Log In", new loginPanelCreator().returnPanel());
+		optionTab.addTab("Log In", new loginPanelCreator().getPanel());
 		optionTab.addTab("Sign Up", new signupPanelCreator().returnPanel());		
 	}
 	
