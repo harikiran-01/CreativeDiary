@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 bidda
 
 
 is t
  v x
+=======
+hhhh
+>>>>>>> refs/remotes/origin/master
