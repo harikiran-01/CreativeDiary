@@ -1,4 +1,4 @@
-package com.hk.ui.panelbuilders;
+package com.hk.panelbuilders;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -10,12 +10,12 @@ import javax.swing.JPanel;
 
 import com.hk.ui.HomePage;
 
-public class MenuPanel {
+public class MenuPanelCreator {
 	private JPanel writeDiaryPanel = HomePage.write.getPanel();
 	private JPanel readDiaryPanel = HomePage.read.getPanel();
 	private JPanel menuPanel;
 	private JButton btnWriteDiary, btnReadDiary, btnExit;
-	public MenuPanel() {
+	public MenuPanelCreator() {
 		initComponents();
 		addComponents();
 		//write button action

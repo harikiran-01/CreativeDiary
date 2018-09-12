@@ -1,4 +1,4 @@
-package com.hk.ui.panelbuilders;
+package com.hk.panelbuilders;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;

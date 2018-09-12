@@ -1,4 +1,4 @@
-package com.hk.ui.panelbuilders;
+package com.hk.panelbuilders;
 import javax.swing.*;
 import com.hk.components.*;
 import com.hk.ui.HomePage;

@@ -1,4 +1,4 @@
-package com.hk.ui.panelbuilders;
+package com.hk.panelbuilders;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;

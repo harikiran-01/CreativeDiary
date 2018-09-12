@@ -1,4 +1,4 @@
-package com.hk.ui.panelbuilders;
+package com.hk.panelbuilders;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;

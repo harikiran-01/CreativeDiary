@@ -1,6 +1,7 @@
 package com.hk.ui;
 import javax.swing.*;
-import com.hk.ui.panelbuilders.*;
+
+import com.hk.panelbuilders.*;
 
 public class HomePage{
 	private static JFrame creativeDiary;
@@ -26,7 +27,7 @@ public class HomePage{
 			//read diary panel creator
 			read = new ReadDiaryPanelCreator();
 			//menu panel
-			menuPanel = new MenuPanel().getPanel();
+			menuPanel = new MenuPanelCreator().getPanel();
 			//diary container panel
 			diaryContainerPanel = new DiaryContainerPanel().getPanel();
 		}
