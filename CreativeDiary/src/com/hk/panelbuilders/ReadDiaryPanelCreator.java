@@ -27,9 +27,9 @@ public class ReadDiaryPanelCreator{
 	private JLabel lblEnterDate;
 	private JTextArea contentField;
 	private JScrollPane contentScroll;
-	private JButton btnSearch, btnEdit;
-	private CustomDate searchDate; 
+	private JButton btnSearch, btnEdit; 
 	private JDateChooser dateChooser;
+	private DiaryPage page;
 	public ReadDiaryPanelCreator() {
 		initComponents();
 		addComponents();
@@ -37,15 +37,14 @@ public class ReadDiaryPanelCreator{
 		//search button action
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				searchDate = DateConverter.convertDate(dateChooser);
-				String content = "";
+				page.setDate(DateConverter.convertDate(dateChooser));
 				try {
-					content = getContentFromFile(searchDate);	
-					if(content.equals("Wow! Such Empty"))
+					page.setContent(getContentFromFile(page.getDate()));	
+					if(page.getContent().equals("Wow! Such Empty"))
 						btnEdit.setVisible(false);
 					else
 						btnEdit.setVisible(true);
-					contentField.setText(content.trim());
+					contentField.setText(page.getContent().trim());
 					contentField.setCaretPosition(0);
 			}
 			catch(IOException ex) {
@@ -57,7 +56,7 @@ public class ReadDiaryPanelCreator{
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				HomePage.replacePanel(HomePage.write.getPanel());
-				HomePage.write.updateEditFields(searchDate, contentField.getText().trim());
+				HomePage.write.updateEditFields(page);
 			}
 		});	
 	}
@@ -89,6 +88,8 @@ public class ReadDiaryPanelCreator{
 		btnEdit = new JButton("EDIT");
 		btnEdit.setVisible(false);
 		btnEdit.setBounds(403, 21, 64, 23);
+		//diary page
+		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
 	}
 	
 	
@@ -101,8 +102,7 @@ public class ReadDiaryPanelCreator{
 	}
 	
 	public String getContentFromFile(CustomDate date) throws IOException {
-		String filename = StorageSpace.currentpath+CurrentUser.getInstance().getUserName()+
-				"\\"+date.getYear()+"\\"+date.getMonth()+"\\"+date.getDay()+".txt";
+		String filename = StorageSpace.currentpath+"\\"+date.getYear()+"\\"+date.getMonth()+"\\"+date.getDay()+".txt";
 		if(new File(filename).exists())
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -122,13 +122,13 @@ public class ReadDiaryPanelCreator{
 			return "Wow! Such Empty";
 	}
 	
-	public void updateFields(CustomDate findDate) {
+	public void updateFields(DiaryPage newpage) {
 		displayHighlights();
 		btnEdit.setVisible(true);
-		searchDate = findDate;
-		dateChooser.setDate(DateConverter.convertfromCustom(searchDate));
+		page.setDate(newpage.getDate());
+		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
 		try {
-			contentField.setText(getContentFromFile(searchDate));
+			contentField.setText(getContentFromFile(page.getDate()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -195,7 +195,7 @@ public class ReadDiaryPanelCreator{
 	
 	private List<Date> getFilledDates() {
 		List<Date> filledDates = new ArrayList<Date>();
-		String filename = StorageSpace.currentpath+CurrentUser.getInstance().getUserName();
+		String filename = StorageSpace.currentpath;
 		File folder = new File(filename);
 		String[] yearfolders = folder.list(new FilenameFilter() {					
 			@Override
@@ -204,7 +204,7 @@ public class ReadDiaryPanelCreator{
 			}
 		});
 		for(int i=0; i<yearfolders.length;i++) {
-			folder = new File(filename + "\\"+ yearfolders[i]);
+			folder = new File(filename + "\\" + yearfolders[i]);
 			if(folder.exists()) {
 				String[] monthfolders = folder.list(new FilenameFilter() {					
 					@Override

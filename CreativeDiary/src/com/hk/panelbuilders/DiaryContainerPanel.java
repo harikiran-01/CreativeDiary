@@ -16,9 +16,7 @@ public class DiaryContainerPanel {
 	
 	public DiaryContainerPanel() {
 		initComponents();
-		addComponents();
-		
-		
+		addComponents();	
 	}
 	private void initComponents() {
 		//diary container panel
