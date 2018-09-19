@@ -7,11 +7,11 @@ import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
 import com.hk.components.*;
 import javax.swing.JLabel;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +29,7 @@ public class ReadDiaryPanelCreator{
 	private JScrollPane contentScroll;
 	private JButton btnSearch, btnEdit; 
 	private JDateChooser dateChooser;
+	private StarRater rating;
 	private DiaryPage page;
 	public ReadDiaryPanelCreator() {
 		initComponents();
@@ -37,18 +38,21 @@ public class ReadDiaryPanelCreator{
 		//search button action
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				page.setDate(DateConverter.convertDate(dateChooser));
 				try {
-					page.setContent(getContentFromFile(page.getDate()));	
-					if(page.getContent().equals("Wow! Such Empty"))
+					page = getDiaryPage(DateConverter.convertDate(dateChooser));	
+					if(page.getContent().equals("")) {
+						page.setContent("Wow! Such Empty");
 						btnEdit.setVisible(false);
+					}
 					else
 						btnEdit.setVisible(true);
 					contentField.setText(page.getContent().trim());
 					contentField.setCaretPosition(0);
+					rating.setSelection(page.getRating());
+	
 			}
-			catch(IOException ex) {
-				System.out.println(ex);}
+			catch(IOException | ClassNotFoundException e) {
+				System.out.println(e);}
 			}
 		});
 		
@@ -90,6 +94,10 @@ public class ReadDiaryPanelCreator{
 		btnEdit.setBounds(403, 21, 64, 23);
 		//diary page
 		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
+		//star rating
+		rating = new StarRater();
+		rating.setEnabled(false);
+		rating.setBounds(10, 62, 88, 23);
 	}
 	
 	
@@ -99,39 +107,32 @@ public class ReadDiaryPanelCreator{
 		readDiaryPanel.add(contentScroll);
 		readDiaryPanel.add(btnSearch);
 		readDiaryPanel.add(btnEdit);
+		readDiaryPanel.add(rating);
 	}
 	
-	public String getContentFromFile(CustomDate date) throws IOException {
+	public DiaryPage getDiaryPage(CustomDate date) throws IOException, ClassNotFoundException {
+		DiaryPage page;
 		String filename = StorageSpace.currentpath+"\\"+date.getYear()+"\\"+date.getMonth()+"\\"+date.getDay()+".txt";
-		if(new File(filename).exists())
-		{
-			BufferedReader reader = new BufferedReader(new FileReader(filename));
-			StringBuilder stringBuilder = new StringBuilder();
-			String line = null;
-			String ls = System.getProperty("line.separator");
-			while ((line = reader.readLine()) != null) {
-				stringBuilder.append(line);
-				stringBuilder.append(ls);
-			}
-			// deleting the last new line separator
-			stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-			reader.close();
-			return stringBuilder.toString().trim();
+		if(!new File(filename).exists()) {
+			page = new DiaryPage();
 		}
-		else
-			return "Wow! Such Empty";
+		else {
+			FileInputStream file = new FileInputStream(filename);
+			ObjectInputStream in = new ObjectInputStream(file);   
+			page = (DiaryPage)in.readObject();
+			in.close();
+			file.close();
+		}
+		return page;
 	}
 	
-	public void updateFields(DiaryPage newpage) {
+	public void updateFields(DiaryPage newpage) throws ClassNotFoundException {
 		displayHighlights();
 		btnEdit.setVisible(true);
-		page.setDate(newpage.getDate());
+		page = newpage;
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
-		try {
-			contentField.setText(getContentFromFile(page.getDate()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			contentField.setText(page.getContent());
+			rating.setSelection(page.getRating());
 	}
 	
 	public JPanel getPanel() {
@@ -171,7 +172,7 @@ public class ReadDiaryPanelCreator{
 
 	@Override
 	public String getSpecialTooltip() {
-		return "high";
+		return "filled";
 	}
 
 	@Override
@@ -233,5 +234,4 @@ public class ReadDiaryPanelCreator{
 		}
 		return filledDates;
 	}
-
 }

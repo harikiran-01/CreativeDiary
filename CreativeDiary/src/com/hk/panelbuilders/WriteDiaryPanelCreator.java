@@ -13,6 +13,7 @@ import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class WriteDiaryPanelCreator{
 	private UserProfile currentuser = CurrentUser.getInstance();
@@ -23,91 +24,8 @@ public class WriteDiaryPanelCreator{
 	private JDateChooser dateChooser;
 	private JButton save,setDate;
 	private DiaryPage page;
-	public WriteDiaryPanelCreator(){
-		initComponents();
-		addComponents();
-		
-		//content field focus
-		contentfield.addFocusListener(new FocusAdapter() {
-		@Override
-		public void focusGained(FocusEvent arg0) {
-			if(contentfield.getText().equals("Start writing here"))
-				contentfield.setText("");
-		}
-		@Override
-		public void focusLost(FocusEvent arg0) {
-			if(contentfield.getText().equals(""))
-				contentfield.setText("Start writing here");
-		}
-	});	
-		
-	//set button action	
-	setDate.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent arg0) {
-			if(dateBoundary()) {
-				contentfield.setEnabled(true);
-				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
-				CustomDate lastDate = page.getDate();
-				page.setDate(DateConverter.convertDate(dateChooser));
-				if(!samepage) {
-				if(isAlreadyWritten())
-				{
-					try {
-						int option = readOrEditDialog();
-						if(option==0) {
-							HomePage.replacePanel(HomePage.read.getPanel());
-							HomePage.read.updateFields(page);
-						}
-						else if(option==1) {
-						page.setContent(HomePage.read.getContentFromFile(page.getDate()));
-						updateEditFields(page);
-						}
-						else {
-							page.setDate(lastDate);
-							dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
-						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				else{
-					contentfield.setText("Start writing here");
-					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
-				}
-				}
-			}
-			else {
-				dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
-			}
-		}
-	});
+	private StarRater rating; 
 	
-	//save button action
-		save.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent arg0) {
-			page.setContent(contentfield.getText());
-			if(page.getContent().equals("") || page.getContent().equals("Start writing here"))
-			{
-				Object[] option = {"I get it","My Bad!"};
-				JOptionPane.showOptionDialog(HomePage.getFrame(),"Uh Oh! Can't save an empty page",
-						"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
-			}
-			else {				
-			try {
-				EncryptFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
-					"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon("green_tick.png"));
-			}
-		}
-	});
-	}
-
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
 		writeDiaryPanel.setLayout(null);
@@ -142,6 +60,10 @@ public class WriteDiaryPanelCreator{
 		save.setBounds(221, 441, 88, 23);
 		//diary page
 		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
+		//star rater
+		rating = new StarRater();
+		rating.setEnabled(false);
+		rating.setBounds(346, 61, 88, 23);
 	}
 	
 	private void addComponents() {
@@ -152,6 +74,95 @@ public class WriteDiaryPanelCreator{
 		writeDiaryPanel.add(greetMessage);
 		writeDiaryPanel.add(dayInfo);	
 		writeDiaryPanel.add(setDate);
+		writeDiaryPanel.add(rating);
+	}
+	
+	public WriteDiaryPanelCreator(){
+		initComponents();
+		addComponents();
+		
+		//content field focus
+		contentfield.addFocusListener(new FocusAdapter() {
+		@Override
+		public void focusGained(FocusEvent arg0) {
+			if(contentfield.getText().equals("Start writing here"))
+				contentfield.setText("");
+		}
+		@Override
+		public void focusLost(FocusEvent arg0) {
+			if(contentfield.getText().equals(""))
+				contentfield.setText("Start writing here");
+		}
+	});	
+		
+	//set button action	
+	setDate.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+			if(dateBoundary()) {
+				contentfield.setEnabled(true);
+				rating.setEnabled(true);
+				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
+				CustomDate lastDate = page.getDate();
+				page.setDate(DateConverter.convertDate(dateChooser));
+				if(!samepage) {
+				if(isAlreadyWritten())
+				{
+					try {
+						page = HomePage.read.getDiaryPage(page.getDate());
+						int option = readOrEditDialog();
+						if(option==0) {
+							HomePage.read.updateFields(page);
+							HomePage.replacePanel(HomePage.read.getPanel());
+						}
+						else if(option==1) {
+						
+						updateEditFields(page);
+						}
+						else {
+							page.setDate(lastDate);
+							dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
+						}
+					} catch (IOException | ClassNotFoundException e) {
+						e.printStackTrace();
+					} 
+				}
+				else{
+					contentfield.setText("Start writing here");
+					rating.setSelection(0);
+					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
+				}
+				}
+			}
+			else {
+				dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
+			}
+		}
+	});
+	
+	//save button action
+		save.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+			page.setContent(contentfield.getText());
+			page.setRating(rating.getSelection());
+			if(page.getContent().equals("") || page.getContent().equals("Start writing here"))
+			{
+				Object[] option = {"I get it","My Bad!"};
+				JOptionPane.showOptionDialog(HomePage.getFrame(),"Uh Oh! Can't save an empty page",
+						"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
+			}
+			else {				
+			try {
+				EncryptFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
+					"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
+					new ImageIcon("green_tick.png"));
+			}
+		}
+	});
 	}
 	
 	public String reviseFileName() {
@@ -164,7 +175,8 @@ public class WriteDiaryPanelCreator{
 		File f = new File(reviseFileName());
 		f.getParentFile().mkdirs();
 		FileOutputStream outputStream = new FileOutputStream(reviseFileName());
-	    outputStream.write(page.getContent().getBytes());
+        ObjectOutputStream out = new ObjectOutputStream(outputStream);
+	    out.writeObject(page);
 	    outputStream.close();
 	}
 	
@@ -203,9 +215,11 @@ public class WriteDiaryPanelCreator{
 	public void updateEditFields(DiaryPage newpage) {
 		page = newpage;
 		contentfield.setEnabled(true);
+		rating.setEnabled(true);
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));	
 		dayInfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 		contentfield.setText(page.getContent());
+		rating.setSelection(page.getRating());
 	}
 	
 	
