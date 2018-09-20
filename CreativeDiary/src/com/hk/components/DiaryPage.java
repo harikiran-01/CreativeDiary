@@ -32,7 +32,7 @@ public class DiaryPage implements Serializable{
 	
 	public DiaryPage() {
 		this.date = new CustomDate(0, 0, 0);
-		this.content = "Wow! Such Empty";
+		this.content = "";
 		this.rating = 0;
 	}
 	

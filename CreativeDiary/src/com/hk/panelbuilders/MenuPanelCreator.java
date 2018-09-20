@@ -51,8 +51,8 @@ public class MenuPanelCreator {
 	private void initComponents() {
 		//menu panel
 		menuPanel = new JPanel();
-		menuPanel.setBounds(0, 0, 167, 475);
-		menuPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 50));
+		menuPanel.setBounds(0, 2, 167, 575);
+		menuPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
 		//write button
 		btnWriteDiary = new JButton("Write Diary");
 		//read button

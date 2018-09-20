@@ -14,6 +14,35 @@ public class signupPanelCreator extends AccessControls{
 	private JLabel doblabel;
 	JDateChooser dateChooser;
 	
+	private void initComponents() {
+		//signup panel
+		signupPanel.setLayout(null);
+		//username label
+		ulabel.setBounds(70, 18, 103, 14);
+		//username field
+		userName.setBounds(55, 43, 126, 20);
+		//password label
+		plabel.setBounds(70, 127, 100, 14);
+		//password field
+		passwordField.setBounds(55, 152, 126, 20);
+		//dob label
+		doblabel = new JLabel("Select DOB");
+		doblabel.setBounds(25, 83, 81, 14);
+		//date chooser
+		dateChooser = new JDateChooser();
+		dateChooser.setBounds(108, 83, 91, 20);
+		dateChooser.setMaxSelectableDate(CurrentDay.getDate());
+		//register button
+		register = new JButton("REGISTER");	
+		register.setBounds(70, 183, 97, 23);
+		}
+
+	private void addComponents() {
+		signupPanel.add(doblabel);
+		signupPanel.add(dateChooser);
+		signupPanel.add(register);	
+	}
+	
 	public signupPanelCreator() {
 		super(signupPanel);
 		initComponents();
@@ -32,36 +61,6 @@ public class signupPanelCreator extends AccessControls{
 			}
 		});
 	}
-
-private void initComponents() {
-	//signup panel
-	signupPanel.setLayout(null);
-	//username label
-	ulabel.setBounds(70, 18, 103, 14);
-	//username field
-	userName.setBounds(55, 43, 126, 20);
-	//password label
-	plabel.setBounds(70, 127, 100, 14);
-	//password field
-	passwordField.setBounds(55, 152, 126, 20);
-	//dob label
-	doblabel = new JLabel("Select DOB");
-	doblabel.setBounds(25, 83, 81, 14);
-	//date chooser
-	dateChooser = new JDateChooser();
-	dateChooser.setBounds(108, 83, 91, 20);
-	dateChooser.setMaxSelectableDate(CurrentDay.getDate());
-	//register button
-	register = new JButton("REGISTER");	
-	register.setBounds(70, 183, 97, 23);
-	}
-
-
-private void addComponents() {
-	signupPanel.add(doblabel);
-	signupPanel.add(dateChooser);
-	signupPanel.add(register);	
-}
 	
 public void storeUser(List<UserProfile> users) {
          try {

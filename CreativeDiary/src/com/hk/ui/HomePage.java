@@ -20,7 +20,7 @@ public class HomePage{
 			creativeDiary.getContentPane().setLayout(null);
 			creativeDiary.setResizable(false);
 			creativeDiary.setVisible(true);
-			creativeDiary.setSize(700,500);
+			creativeDiary.setSize(800,600);
 			creativeDiary.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			//write diary panel creator
 			write = new WriteDiaryPanelCreator();

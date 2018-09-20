@@ -1,6 +1,5 @@
 package com.hk.panelbuilders;
 
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -15,12 +14,40 @@ import com.hk.ui.HomePage;
 import com.hk.ui.LockPage;
 
 public class loginPanelCreator extends AccessControls implements ActionListener{	
-	private UserProfile user;
 	private static JPanel loginPanel =  new JPanel();
 	private JButton login;
 	private JLabel status;
 	private JProgressBar load;
 	int loadcount=0;
+	private void initComponents() {
+		//login panel
+		loginPanel.setLayout(null);
+		//username label
+		ulabel.setBounds(70, 18, 103, 14);
+		//username field
+		userName.setBounds(55, 43, 126, 20);
+		//password label
+		plabel.setBounds(70, 83, 103, 14);
+		//password field
+		passwordField.setBounds(55, 107, 126, 20);
+		//login button
+		login = new JButton("LOGIN");
+		login.setBounds(67, 147, 97, 23);
+		//login status label
+		status = new JLabel();
+		status.setBounds(37, 193, 190, 23);
+		//progress bar
+		load = new JProgressBar(0,2);
+		load.setBounds(55, 193, 126, 15);
+		load.setVisible(false);
+	}
+
+	private void addComponents() {
+	loginPanel.add(login);
+	loginPanel.add(load);
+	loginPanel.add(status);
+	}
+	
 	public loginPanelCreator(){	
 		super(loginPanel);
 		initComponents();
@@ -35,12 +62,11 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 					if(finduser.getUserName().equals(userName.getText()) && Arrays.equals(finduser.getPasswordField().getPassword(), passwordField.getPassword())) {
 						status.setVisible(false);
 						load.setVisible(true);
-						user = finduser;
-						CurrentUser.init(user);
+						CurrentUser.init(finduser);
 						t.start();
 					}
 					else {
-						status.setText("Invalid passcode. Try Again");
+						status.setText("Invalid credentials! Try Again");
 					}
 					}
 					}
@@ -51,24 +77,6 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 			});
 
 }
-
-private void initComponents() {
-		//login panel
-		loginPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 15));
-		//login button
-		login = new JButton("LOGIN");	
-		//login status label
-		status = new JLabel();
-		//progress bar
-		load = new JProgressBar(0,2);
-		load.setVisible(false);
-	}
-
-private void addComponents() {
-	loginPanel.add(login);
-	loginPanel.add(load);
-	loginPanel.add(status);
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {

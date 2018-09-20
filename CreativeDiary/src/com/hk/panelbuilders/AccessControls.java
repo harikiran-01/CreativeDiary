@@ -20,18 +20,9 @@ public abstract class AccessControls {
 	protected JTextField userName;
 	protected JPasswordField passwordField;
 	protected List<UserProfile> users;
-	public AccessControls() {
-		initComponents();
-	}
 	public AccessControls(JPanel accessPanel) {
-		this();
+		initComponents();
 		addComponents(accessPanel);
-	}
-	private void addComponents(JPanel accessPanel) {
-		accessPanel.add(ulabel);
-		accessPanel.add(userName);
-		accessPanel.add(plabel);
-		accessPanel.add(passwordField);
 	}
 
 	private void initComponents() {
@@ -45,6 +36,13 @@ public abstract class AccessControls {
 		plabel = new JLabel("Enter Passcode");
 		//password field
 		passwordField = new JPasswordField(15);	
+	}
+	
+	private void addComponents(JPanel accessPanel) {
+		accessPanel.add(ulabel);
+		accessPanel.add(userName);
+		accessPanel.add(plabel);
+		accessPanel.add(passwordField);
 	}
 	
 	@SuppressWarnings("unchecked")

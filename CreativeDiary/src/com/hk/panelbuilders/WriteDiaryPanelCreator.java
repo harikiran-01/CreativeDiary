@@ -29,6 +29,7 @@ public class WriteDiaryPanelCreator{
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
 		writeDiaryPanel.setLayout(null);
+		writeDiaryPanel.setBounds(166, 0, 628, 575);
 		//welcome user
 		greetMessage = new JLabel("Welcome "+currentuser.getUserName().toUpperCase());
 		greetMessage.setFont(new Font("Script MT Bold", Font.PLAIN, 20));
@@ -36,11 +37,11 @@ public class WriteDiaryPanelCreator{
 		//pick date label
 		lblPickDate = new JLabel("Pick Date:");
 		lblPickDate.setFont(new Font("Viner Hand ITC", Font.PLAIN, 16));
-		lblPickDate.setBounds(252, 9, 81, 25);
+		lblPickDate.setBounds(352, 9, 81, 25);
 		//date chooser
 		dateChooser = new JDateChooser(CurrentDay.getDate());	
 		dateChooser.setDateFormatString("dd MM yyyy");
-		dateChooser.setBounds(343, 9, 91, 20);
+		dateChooser.setBounds(443, 9, 91, 20);
 		//day info
 		dayInfo = new JLabel("Click SET to select the date");
 		dayInfo.setBounds(22, 61, 286, 14);
@@ -51,19 +52,19 @@ public class WriteDiaryPanelCreator{
 		contentfield.setEnabled(false);
 		//content scroll pane
 		contentScroll = new JScrollPane(contentfield);
-		contentScroll.setBounds(10,96, 508, 334);
+		contentScroll.setBounds(10,96, 608, 380);
 		//set date button
 		setDate = new JButton("SET");
-		setDate.setBounds(444, 9, 74, 23);
+		setDate.setBounds(544, 9, 74, 23);
 		//save button
 		save = new JButton("SAVE");
-		save.setBounds(221, 441, 88, 23);
+		save.setBounds(255, 530, 81, 23);
 		//diary page
 		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
 		//star rater
 		rating = new StarRater();
+		rating.setBounds(255, 496, 81, 25);
 		rating.setEnabled(false);
-		rating.setBounds(346, 61, 88, 23);
 	}
 	
 	private void addComponents() {
@@ -73,8 +74,9 @@ public class WriteDiaryPanelCreator{
 		writeDiaryPanel.add(dateChooser);
 		writeDiaryPanel.add(greetMessage);
 		writeDiaryPanel.add(dayInfo);	
-		writeDiaryPanel.add(setDate);
+		writeDiaryPanel.add(setDate);		
 		writeDiaryPanel.add(rating);
+		
 	}
 	
 	public WriteDiaryPanelCreator(){
@@ -98,7 +100,9 @@ public class WriteDiaryPanelCreator{
 	//set button action	
 	setDate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
+			boolean isDateSet = false;
 			if(dateBoundary()) {
+				isDateSet = true;
 				contentfield.setEnabled(true);
 				rating.setEnabled(true);
 				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
@@ -114,14 +118,13 @@ public class WriteDiaryPanelCreator{
 							HomePage.read.updateFields(page);
 							HomePage.replacePanel(HomePage.read.getPanel());
 						}
-						else if(option==1) {
-						
+						else if(option==1) {						
 						updateEditFields(page);
 						}
 						else {
 							page.setDate(lastDate);
-							dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
-						}
+								dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));		
+							}
 					} catch (IOException | ClassNotFoundException e) {
 						e.printStackTrace();
 					} 
@@ -133,8 +136,11 @@ public class WriteDiaryPanelCreator{
 				}
 				}
 			}
-			else {
-				dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
+			else{
+				if(isDateSet)
+					dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));		
+				else
+					dateChooser.setDate(CurrentDay.getDate());
 			}
 		}
 	});
