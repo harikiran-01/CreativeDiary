@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -19,7 +20,7 @@ public abstract class AccessControls {
 	protected JLabel plabel;
 	protected JTextField userName;
 	protected JPasswordField passwordField;
-	protected List<UserProfile> users;
+	protected List<UserProfile> users = new ArrayList<UserProfile>();
 	public AccessControls(JPanel accessPanel) {
 		initComponents();
 		addComponents(accessPanel);

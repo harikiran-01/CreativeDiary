@@ -36,9 +36,8 @@ public class MenuPanelCreator {
 			public void actionPerformed(ActionEvent arg0) {
 				int choice = JOptionPane.showConfirmDialog(HomePage.getFrame(), "Any unsaved information will be lost. Are you sure?",
 						"Exit",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-				if(choice==0)
-				HomePage.getFrame().dispose();
-			}	
+				if(choice==0) 
+				HomePage.getFrame().dispose();}	
 		});
 	}
 	

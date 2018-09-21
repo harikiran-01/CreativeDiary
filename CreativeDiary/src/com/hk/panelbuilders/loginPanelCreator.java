@@ -18,7 +18,8 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 	private JButton login;
 	private JLabel status;
 	private JProgressBar load;
-	int loadcount=0;
+	int loadcount;
+	Timer t;
 	private void initComponents() {
 		//login panel
 		loginPanel.setLayout(null);
@@ -35,11 +36,15 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 		login.setBounds(67, 147, 97, 23);
 		//login status label
 		status = new JLabel();
-		status.setBounds(37, 193, 190, 23);
+		status.setBounds(37, 193, 190, 40);
 		//progress bar
 		load = new JProgressBar(0,2);
 		load.setBounds(55, 193, 126, 15);
 		load.setVisible(false);
+		//loading bar counter
+		loadcount = 0;
+		//loading bar timer
+		t = new Timer(250,this);
 	}
 
 	private void addComponents() {
@@ -53,7 +58,7 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 		initComponents();
 		addComponents();
 		
-		Timer t = new Timer(250,this);
+		
 		login.addActionListener(new ActionListener() {		
 				public void actionPerformed(ActionEvent ae) {
 					if(getStoredUserData()) {
@@ -71,7 +76,8 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 					}
 					}
 					else {
-						status.setText("<html><body>No Registered Users!<br>Sign Up to start using</body></html>");
+						status.setBounds(52, 190, 190, 40);
+						status.setText("<html><body>  No Registered Users!<br>Sign Up to start using</body></html>");
 					}
 				}
 			});

@@ -47,6 +47,7 @@ public class signupPanelCreator extends AccessControls{
 		super(signupPanel);
 		initComponents();
 		addComponents();
+		
 		//register button action
 		register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -56,7 +57,12 @@ public class signupPanelCreator extends AccessControls{
 				getStoredUserData();
 				//adding new data
 				UserProfile user = new UserProfile(userName.getText(), DateConverter.convertDate(dateChooser), passwordField);
+				//creating folder for user
+				File fd = new File("users\\" + user.getUserName());
+				fd.mkdirs();
+				//adding new user to user list
 				users.add(user);
+				//writing user list back to file
 				storeUser(users);
 			}
 		});
@@ -69,8 +75,9 @@ public void storeUser(List<UserProfile> users) {
              ObjectOutputStream out = new ObjectOutputStream(file);
              if(users==null)
              out.reset();
-             
+             //writing user login details
 			 out.writeObject(users);
+			 
 			 //closing streams
 			 out.close();
 	         file.close();

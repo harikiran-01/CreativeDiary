@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class ReadDiaryPanelCreator{
 	private JPanel readDiaryPanel;
@@ -23,18 +24,21 @@ public class ReadDiaryPanelCreator{
 	private JDateChooser dateChooser;
 	private StarRater rating;
 	private DiaryPage page;
+	private JLabel lblRating;
 	
 	private void initComponents() {
 		//read diary panel
 		readDiaryPanel = new JPanel();
 		readDiaryPanel.setLayout(null);
+		readDiaryPanel.setBounds(166, 0, 628, 575);
 		//pick date label
 		lblEnterDate = new JLabel("Pick Date:");
-		lblEnterDate.setBounds(82, 25, 87, 14);
+		lblEnterDate.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblEnterDate.setBounds(114, 27, 87, 14);
 		//date chooser
 		dateChooser = new JDateChooser(CurrentDay.getDate());
 		dateChooser.setSelectableDateRange(DateConverter.convertfromCustom(CurrentUser.getInstance().getDob()), CurrentDay.getDate());
-		dateChooser.setBounds(142, 24, 122, 20);
+		dateChooser.setBounds(189, 23, 122, 20);
 		//content Field
 		contentField = new JTextArea("hello, select a date to relive your memory");
 		contentField.setBounds(10, 90, 430, 184);
@@ -43,20 +47,24 @@ public class ReadDiaryPanelCreator{
 		contentField.setLineWrap(true);
 		//content scroll pane
 		contentScroll = new JScrollPane(contentField);
-		contentScroll.setBounds(10,96, 508, 334);
+		contentScroll.setBounds(10,96, 608, 380);
 		//search button
 		btnSearch = new JButton("SEARCH");
-		btnSearch.setBounds(297, 21, 95, 23);
+		btnSearch.setBounds(321, 22, 95, 23);
 		//edit button
 		btnEdit = new JButton("EDIT");
 		btnEdit.setVisible(false);
-		btnEdit.setBounds(403, 21, 64, 23);
+		btnEdit.setBounds(426, 22, 64, 23);
 		//diary page
 		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
+		//rating label
+		lblRating = new JLabel("Rating: ");
+		lblRating.setFont(new Font("Stencil", Font.PLAIN, 14));
+		lblRating.setBounds(22, 65, 81, 14);
 		//star rating
 		rating = new StarRater();
 		rating.setEnabled(false);
-		rating.setBounds(10, 62, 88, 23);
+		rating.setBounds(82, 62, 88, 23);
 	}
 	
 	
@@ -67,6 +75,9 @@ public class ReadDiaryPanelCreator{
 		readDiaryPanel.add(btnSearch);
 		readDiaryPanel.add(btnEdit);
 		readDiaryPanel.add(rating);
+		
+		
+		readDiaryPanel.add(lblRating);
 	}
 	
 	public ReadDiaryPanelCreator() {
@@ -138,6 +149,4 @@ public class ReadDiaryPanelCreator{
 		 Thread t = new Thread(new FilledIndicator(dateChooser));
 		 t.start();
 	}
-	
-	
 }
