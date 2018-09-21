@@ -5,7 +5,6 @@ import com.hk.ui.HomePage;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
 import java.awt.Font;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.FocusAdapter;
@@ -159,13 +158,13 @@ public class WriteDiaryPanelCreator{
 			else {				
 			try {
 				EncryptFile();
+				new QAPanel().getDialog() ;
+//				JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
+//						"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
+//						new ImageIcon("green_tick.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
-			
-			JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
-					"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon("green_tick.png"));
+			}	
 			}
 		}
 	});

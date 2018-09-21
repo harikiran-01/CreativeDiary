@@ -29,7 +29,7 @@ public class HomePage{
 			//menu panel
 			menuPanel = new MenuPanelCreator().getPanel();
 			//diary container panel
-			diaryContainerPanel = new DiaryContainerPanel().getPanel();
+			diaryContainerPanel = new DiaryContainerPanelCreator().getPanel();
 		}
 		
 		private void addComponents() {

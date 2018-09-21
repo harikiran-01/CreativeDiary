@@ -10,11 +10,11 @@ import javax.swing.border.BevelBorder;
 
 import com.hk.components.CurrentUser;
 
-public class DiaryContainerPanel {
+public class DiaryContainerPanelCreator {
 	private JPanel diaryContainerPanel;
 	private JPanel welcomePanel;
 	
-	public DiaryContainerPanel() {
+	public DiaryContainerPanelCreator() {
 		initComponents();
 		addComponents();	
 	}
