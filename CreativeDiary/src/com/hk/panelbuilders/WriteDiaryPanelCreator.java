@@ -157,8 +157,10 @@ public class WriteDiaryPanelCreator{
 			}
 			else {				
 			try {
+				QADialog qaDialog = new QADialog();
+				qaDialog.getDialog();
+				page.setQAData(qaDialog.getQAData());
 				EncryptFile();
-				new QAPanel().getDialog() ;
 //				JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
 //						"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
 //						new ImageIcon("green_tick.png"));

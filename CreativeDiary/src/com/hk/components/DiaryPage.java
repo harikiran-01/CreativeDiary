@@ -1,6 +1,7 @@
 package com.hk.components;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class DiaryPage implements Serializable{
 	/**
@@ -10,6 +11,7 @@ public class DiaryPage implements Serializable{
 	private CustomDate date;
 	private String content;
 	private int rating;
+	private List<QA> questions;
 
 	public CustomDate getDate() {
 		return date;
@@ -28,6 +30,12 @@ public class DiaryPage implements Serializable{
 	}
 	public void setRating(int rating) {
 		this.rating = rating;
+	}
+	public List<QA> getQuestions() {
+		return questions;
+	}
+	public void setQAData(List<QA> questions) {
+		this.questions = questions;
 	}
 	
 	public DiaryPage() {
