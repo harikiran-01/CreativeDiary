@@ -121,7 +121,6 @@ public class WriteDiaryPanelCreator{
 							HomePage.replacePanel(HomePage.read.getPanel());
 						}
 						else if(option==1) {
-						editflag = true;
 						updateEditFields(page);
 						}
 						else {
@@ -133,8 +132,6 @@ public class WriteDiaryPanelCreator{
 					} 
 				}
 				else{
-					//insight questions
-					qGenerator = new InsightQuestions();
 					contentfield.setText("Start writing here");
 					rating.setSelection(0);
 					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
@@ -166,8 +163,10 @@ public class WriteDiaryPanelCreator{
 				QADialog qaDialog;
 				if(editflag && page.getQAData()!=null)
 				qaDialog = new QADialog(page.getQAData(), QADialog.WRITE_MODE);
-				else
-				qaDialog = new QADialog(qGenerator.getGeneratedQuestions(), QADialog.WRITE_MODE);
+				else { 
+				//insight questions
+				qGenerator = new InsightQuestions();
+				qaDialog = new QADialog(qGenerator.getGeneratedQuestions(), QADialog.WRITE_MODE);}
 				
 				qaDialog.showDialog();
 				page.setQAData(qaDialog.getQAData());
@@ -231,6 +230,7 @@ public class WriteDiaryPanelCreator{
 	}
 	
 	public void updateEditFields(DiaryPage newpage) {
+		editflag = true;
 		page = newpage;
 		contentfield.setEnabled(true);
 		rating.setEnabled(true);

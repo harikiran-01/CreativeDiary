@@ -95,6 +95,7 @@ public class ReadDiaryPanelCreator{
 					if(page.getContent().equals("")) {
 						page.setContent("Wow! Such Empty");
 						btnEdit.setVisible(false);
+						insightButton.setVisible(false);
 					}
 					else {
 						btnEdit.setVisible(true);
@@ -145,6 +146,7 @@ public class ReadDiaryPanelCreator{
 	public void updateFields(DiaryPage newpage) throws ClassNotFoundException {
 		displayHighlights();
 		btnEdit.setVisible(true);
+		insightButton.setVisible(true);
 		page = newpage;
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
 			contentField.setText(page.getContent());

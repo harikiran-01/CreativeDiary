@@ -29,7 +29,6 @@ public class QADialog {
 		this.qaList = genList;
 		generateQAPanels(qaList, accessmode);
 		if(accessmode == READ_MODE) {
-			updatePanelSettings();
 			saveButton.setText("COOL");
 		}
 		buildDialog();
@@ -45,12 +44,6 @@ public class QADialog {
 			}
 		});
 	}
-	
-
-	private void updatePanelSettings() {
-		
-	}
-
 
 	private void buildDialog() {
 		Box list = Box.createVerticalBox();
