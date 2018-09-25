@@ -31,7 +31,7 @@ public class DiaryPage implements Serializable{
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-	public List<QA> getQuestions() {
+	public List<QA> getQAData() {
 		return questions;
 	}
 	public void setQAData(List<QA> questions) {

@@ -24,6 +24,8 @@ public class WriteDiaryPanelCreator{
 	private JButton save,setDate;
 	private DiaryPage page;
 	private StarRater rating; 
+	private InsightQuestions qGenerator;
+	private boolean editflag = false;
 	
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
@@ -101,6 +103,7 @@ public class WriteDiaryPanelCreator{
 		public void actionPerformed(ActionEvent arg0) {
 			boolean isDateSet = false;
 			if(dateBoundary()) {
+				editflag = false;
 				isDateSet = true;
 				contentfield.setEnabled(true);
 				rating.setEnabled(true);
@@ -113,11 +116,12 @@ public class WriteDiaryPanelCreator{
 					try {
 						page = HomePage.read.getDiaryPage(page.getDate());
 						int option = readOrEditDialog();
-						if(option==0) {
+						if(option==0) {							
 							HomePage.read.updateFields(page);
 							HomePage.replacePanel(HomePage.read.getPanel());
 						}
-						else if(option==1) {						
+						else if(option==1) {
+						editflag = true;
 						updateEditFields(page);
 						}
 						else {
@@ -129,6 +133,8 @@ public class WriteDiaryPanelCreator{
 					} 
 				}
 				else{
+					//insight questions
+					qGenerator = new InsightQuestions();
 					contentfield.setText("Start writing here");
 					rating.setSelection(0);
 					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
@@ -157,13 +163,18 @@ public class WriteDiaryPanelCreator{
 			}
 			else {				
 			try {
-				QADialog qaDialog = new QADialog();
-				qaDialog.getDialog();
+				QADialog qaDialog;
+				if(editflag && page.getQAData()!=null)
+				qaDialog = new QADialog(page.getQAData(), QADialog.WRITE_MODE);
+				else
+				qaDialog = new QADialog(qGenerator.getGeneratedQuestions(), QADialog.WRITE_MODE);
+				
+				qaDialog.showDialog();
 				page.setQAData(qaDialog.getQAData());
 				EncryptFile();
-//				JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
-//						"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
-//						new ImageIcon("green_tick.png"));
+				JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
+						"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon("green_tick.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}	

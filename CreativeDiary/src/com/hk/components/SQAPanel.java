@@ -13,8 +13,10 @@ public class SQAPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private JLabel question;
 	private JTextArea answerField;
-	public SQAPanel() {
-		initComponents();
+	public SQAPanel(String ques, String answer) {
+		initComponents(ques, answer);
+		question.setText(ques);
+		answerField.setText(answer);
 		setPreferredSize(new Dimension(500, 70));
 		setMaximumSize(getPreferredSize());
 		add(question);
@@ -22,25 +24,22 @@ public class SQAPanel extends JPanel{
 		setVisible(true);
 	}
 	
-	public String getQuestionfromLabel() {
-		return question.getText();
+	private void initComponents(String ques, String answer) {
+		question = new JLabel(ques);
+		answerField = new JTextArea(2, 30);
+		answerField.setText(answer);
 	}
 
-	public void setQuestiontoLabel(String question) {
-		this.question.setText(question);
+	public String getQuestionfromLabel() {
+		return question.getText();
 	}
 
 	public String getAnswerfromField() {
 		return answerField.getText();
 	}
-
-	public void setAnswertoField(String answer) {
-		this.answerField.setText(answer);
-	}
-
-	private void initComponents() {
-		question = new JLabel("question");
-		answerField = new JTextArea(2,30);
+	
+	public void setAnswerFieldViewable() {
+		answerField.setEditable(false);
 	}
 	
 }

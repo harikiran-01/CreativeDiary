@@ -20,7 +20,7 @@ public class ReadDiaryPanelCreator{
 	private JLabel lblEnterDate;
 	private JTextArea contentField;
 	private JScrollPane contentScroll;
-	private JButton btnSearch, btnEdit; 
+	private JButton btnSearch, btnEdit, insightButton; 
 	private JDateChooser dateChooser;
 	private StarRater rating;
 	private DiaryPage page;
@@ -65,6 +65,10 @@ public class ReadDiaryPanelCreator{
 		rating = new StarRater();
 		rating.setEnabled(false);
 		rating.setBounds(82, 62, 88, 23);
+		//insights
+		insightButton = new JButton("VIEW INSIGHTS");
+		insightButton.setVisible(false);
+		insightButton.setBounds(261, 505, 122, 23);
 	}
 	
 	
@@ -75,9 +79,8 @@ public class ReadDiaryPanelCreator{
 		readDiaryPanel.add(btnSearch);
 		readDiaryPanel.add(btnEdit);
 		readDiaryPanel.add(rating);
-		
-		
 		readDiaryPanel.add(lblRating);
+		readDiaryPanel.add(insightButton);
 	}
 	
 	public ReadDiaryPanelCreator() {
@@ -93,8 +96,9 @@ public class ReadDiaryPanelCreator{
 						page.setContent("Wow! Such Empty");
 						btnEdit.setVisible(false);
 					}
-					else
+					else {
 						btnEdit.setVisible(true);
+						insightButton.setVisible(true);}
 					contentField.setText(page.getContent().trim());
 					contentField.setCaretPosition(0);
 					rating.setSelection(page.getRating());
@@ -112,6 +116,14 @@ public class ReadDiaryPanelCreator{
 				HomePage.write.updateEditFields(page);
 			}
 		});	
+		
+		//insight button action
+		insightButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				QADialog qa = new QADialog(page.getQAData(), QADialog.READ_MODE);		
+				qa.showDialog();
+			}
+		});
 	}
 	
 	public DiaryPage getDiaryPage(CustomDate date) throws IOException, ClassNotFoundException {

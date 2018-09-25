@@ -14,38 +14,55 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class QADialog {
+	public static final int READ_MODE = 1;
+	public static final int WRITE_MODE = 2;
 	private int totalq = InsightQuestions.totalq;
 	private JDialog qaDialog;
 	private List<SQAPanel> qaListPanel;
 	private List<QA> qaList;
 	private JPanel filledPanel;
 	private JButton saveButton;
-	private InsightQuestions qGenerator;
-	public QADialog() {	
+	
+	public QADialog(List<QA> genList, int accessmode) {	
 		initComponents();
 		
+		this.qaList = genList;
+		generateQAPanels(qaList, accessmode);
+		if(accessmode == READ_MODE) {
+			updatePanelSettings();
+			saveButton.setText("COOL");
+		}
+		buildDialog();
+		
+		//save button action
+		saveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(accessmode == WRITE_MODE)
+				for(int i=0;i<totalq;i++) {					
+					qaList.get(i).setAnswer(qaListPanel.get(i).getAnswerfromField());
+				}
+				qaDialog.dispose();
+			}
+		});
+	}
+	
+
+	private void updatePanelSettings() {
+		
+	}
+
+
+	private void buildDialog() {
 		Box list = Box.createVerticalBox();
-		populateQAPanel();
+		
 		Iterator<SQAPanel> n = qaListPanel.iterator();
 		while(n.hasNext()) {
 			list.add((SQAPanel)n.next());
 		}
 		list.add(buttonPanel());
 		filledPanel.add(list);
-		
-		//save button action
-		saveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				for(int i=0;i<totalq;i++) {
-					qaList.add(new QA(qaListPanel.get(i).getQuestionfromLabel(), qaListPanel.get(i).getAnswerfromField()));
-				}
-			}
-		});
-		
-		//adding panel
-		addComponents(filledPanel);
 	}
-	
+
 
 	private void initComponents() {
 		//qa Dialog
@@ -58,21 +75,15 @@ public class QADialog {
 		//filled panel
 		filledPanel = new JPanel();
 		filledPanel.setLayout(new BoxLayout(filledPanel, BoxLayout.Y_AXIS));
-		//Insight Questions
-		qGenerator = new InsightQuestions();
 		//save button
 		saveButton = new JButton("SAVE");
 	}
 	
-	private void addComponents(JPanel qaListPanel) {  
-		qaDialog.setContentPane(qaListPanel);
-		qaDialog.setVisible(true);
-	}
-
-	private void populateQAPanel() {	
+	private void generateQAPanels(List<QA> filledqaList, int accessmode) {	
 		for(int i=0; i<totalq; i++) {
-		SQAPanel sqa = new SQAPanel();
-		sqa.setQuestiontoLabel(qGenerator.getGeneratedQuestions().get(i).getQuestion());
+		SQAPanel sqa = new SQAPanel(filledqaList.get(i).getQuestion(), filledqaList.get(i).getAnswer());	
+		if(accessmode == READ_MODE)
+		sqa.setAnswerFieldViewable();
 		qaListPanel.add(sqa);
 		}
 	}
@@ -85,12 +96,13 @@ public class QADialog {
 		return buttonPanel;
 	}
 	
-	public JDialog getDialog() {
-		return qaDialog;
-	}
-	
 	public List<QA> getQAData() {
 		return qaList;
+	}
+	
+	public void showDialog() {  
+		qaDialog.setContentPane(filledPanel);
+		qaDialog.setVisible(true);
 	}
 	
 }
