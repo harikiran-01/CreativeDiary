@@ -121,7 +121,7 @@ public class ReadDiaryPanelCreator{
 		//insight button action
 		insightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				QADialog qa = new QADialog(page.getQAData(), QADialog.READ_MODE);		
+				QADialog qa = new QADialog(page.getQAData(), QADialog.READ_MODE);	
 				qa.showDialog();
 			}
 		});

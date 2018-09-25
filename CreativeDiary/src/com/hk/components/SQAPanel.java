@@ -25,7 +25,7 @@ public class SQAPanel extends JPanel{
 	}
 	
 	private void initComponents(String ques, String answer) {
-		question = new JLabel(ques);
+		question = new JLabel(ques, 10);
 		answerField = new JTextArea(2, 30);
 		answerField.setText(answer);
 	}

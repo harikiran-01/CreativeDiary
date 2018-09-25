@@ -61,6 +61,7 @@ public class QADialog {
 		//qa Dialog
 		qaDialog = new JDialog(HomePage.getFrame(), "Questions", true);
 		qaDialog.setSize(500, totalq*100);	
+		qaDialog.setResizable(false);
 		//qa list
 		qaList = new ArrayList<QA>();
 		//qa list panel
@@ -74,7 +75,11 @@ public class QADialog {
 	
 	private void generateQAPanels(List<QA> filledqaList, int accessmode) {	
 		for(int i=0; i<totalq; i++) {
-		SQAPanel sqa = new SQAPanel(filledqaList.get(i).getQuestion(), filledqaList.get(i).getAnswer());	
+		SQAPanel sqa;
+		if(filledqaList!=null)
+		sqa = new SQAPanel(filledqaList.get(i).getQuestion(), filledqaList.get(i).getAnswer());	
+		else
+		sqa = new SQAPanel("QUESTION", "ANSWER");	
 		if(accessmode == READ_MODE)
 		sqa.setAnswerFieldViewable();
 		qaListPanel.add(sqa);
@@ -95,6 +100,7 @@ public class QADialog {
 	
 	public void showDialog() {  
 		qaDialog.setContentPane(filledPanel);
+		qaDialog.setLocationRelativeTo(HomePage.getFrame());
 		qaDialog.setVisible(true);
 	}
 	

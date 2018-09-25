@@ -21,7 +21,7 @@ public class WriteDiaryPanelCreator{
 	private JTextArea contentfield;
 	private JScrollPane contentScroll;
 	private JDateChooser dateChooser;
-	private JButton save,setDate;
+	private JButton next,setDate;
 	private DiaryPage page;
 	private StarRater rating; 
 	private InsightQuestions qGenerator;
@@ -58,8 +58,9 @@ public class WriteDiaryPanelCreator{
 		setDate = new JButton("SET");
 		setDate.setBounds(544, 9, 74, 23);
 		//save button
-		save = new JButton("SAVE");
-		save.setBounds(255, 530, 81, 23);
+		next = new JButton("NEXT");
+		next.setBounds(255, 530, 81, 23);
+		next.setEnabled(false);
 		//diary page
 		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
 		//star rater
@@ -71,7 +72,7 @@ public class WriteDiaryPanelCreator{
 	private void addComponents() {
 		writeDiaryPanel.add(lblPickDate);
 		writeDiaryPanel.add(contentScroll);
-		writeDiaryPanel.add(save);
+		writeDiaryPanel.add(next);
 		writeDiaryPanel.add(dateChooser);
 		writeDiaryPanel.add(greetMessage);
 		writeDiaryPanel.add(dayInfo);	
@@ -107,6 +108,7 @@ public class WriteDiaryPanelCreator{
 				isDateSet = true;
 				contentfield.setEnabled(true);
 				rating.setEnabled(true);
+				next.setEnabled(true);
 				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 				CustomDate lastDate = page.getDate();
 				page.setDate(DateConverter.convertDate(dateChooser));
@@ -148,7 +150,7 @@ public class WriteDiaryPanelCreator{
 	});
 	
 	//save button action
-		save.addActionListener(new ActionListener() {
+		next.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			page.setContent(contentfield.getText());
 			page.setRating(rating.getSelection());
