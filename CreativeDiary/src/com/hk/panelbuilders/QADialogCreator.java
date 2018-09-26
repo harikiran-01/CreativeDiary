@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-public class QADialog {
+public class QADialogCreator {
 	public static final int READ_MODE = 1;
 	public static final int WRITE_MODE = 2;
 	private int totalq = InsightQuestions.totalq;
@@ -23,11 +23,13 @@ public class QADialog {
 	private JPanel filledPanel;
 	private JButton saveButton;
 	
-	public QADialog(List<QA> genList, int accessmode) {	
+	public QADialogCreator(List<QA> receivedList, int accessmode) {	
 		initComponents();
-		
-		this.qaList = genList;
-		generateQAPanels(qaList, accessmode);
+		if(receivedList==null)
+			qaList = new InsightQuestions().getGeneratedQuestions();
+		else
+		this.qaList = receivedList;
+		generateQAPanels(accessmode);
 		if(accessmode == READ_MODE) {
 			saveButton.setText("COOL");
 		}
@@ -73,13 +75,9 @@ public class QADialog {
 		saveButton = new JButton("SAVE");
 	}
 	
-	private void generateQAPanels(List<QA> filledqaList, int accessmode) {	
+	private void generateQAPanels(int accessmode) {			
 		for(int i=0; i<totalq; i++) {
-		SQAPanel sqa;
-		if(filledqaList!=null)
-		sqa = new SQAPanel(filledqaList.get(i).getQuestion(), filledqaList.get(i).getAnswer());	
-		else
-		sqa = new SQAPanel("QUESTION", "ANSWER");	
+		SQAPanel sqa = new SQAPanel(qaList.get(i).getQuestion(), qaList.get(i).getAnswer());	
 		if(accessmode == READ_MODE)
 		sqa.setAnswerFieldViewable();
 		qaListPanel.add(sqa);

@@ -24,8 +24,7 @@ public class WriteDiaryPanelCreator{
 	private JButton next,setDate;
 	private DiaryPage page;
 	private StarRater rating; 
-	private InsightQuestions qGenerator;
-	private boolean editflag = false;
+	private boolean isDateSet = false;
 	
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
@@ -50,7 +49,6 @@ public class WriteDiaryPanelCreator{
 		contentfield = new JTextArea("Start writing here");
 		contentfield.setWrapStyleWord(true);
 		contentfield.setLineWrap(true);
-		contentfield.setEnabled(false);
 		//content scroll pane
 		contentScroll = new JScrollPane(contentfield);
 		contentScroll.setBounds(10,96, 608, 380);
@@ -60,16 +58,15 @@ public class WriteDiaryPanelCreator{
 		//save button
 		next = new JButton("NEXT");
 		next.setBounds(255, 530, 81, 23);
-		next.setEnabled(false);
 		//diary page
 		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
 		//star rater
 		rating = new StarRater();
 		rating.setBounds(255, 496, 81, 25);
-		rating.setEnabled(false);
 	}
 	
 	private void addComponents() {
+		toggleComponents(false);
 		writeDiaryPanel.add(lblPickDate);
 		writeDiaryPanel.add(contentScroll);
 		writeDiaryPanel.add(next);
@@ -102,13 +99,12 @@ public class WriteDiaryPanelCreator{
 	//set button action	
 	setDate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-			boolean isDateSet = false;
+			
 			if(dateBoundary()) {
-				editflag = false;
+				toggleComponents(true);
+				//to check if date within boundaries has been set atleast once
 				isDateSet = true;
-				contentfield.setEnabled(true);
-				rating.setEnabled(true);
-				next.setEnabled(true);
+				//to check if set is pressed while in same page
 				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 				CustomDate lastDate = page.getDate();
 				page.setDate(DateConverter.convertDate(dateChooser));
@@ -141,8 +137,9 @@ public class WriteDiaryPanelCreator{
 				}
 			}
 			else{
-				if(isDateSet)
-					dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));		
+				if(isDateSet) {
+					System.out.println("fired");
+					dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));		}
 				else
 					dateChooser.setDate(CurrentDay.getDate());
 			}
@@ -162,14 +159,14 @@ public class WriteDiaryPanelCreator{
 			}
 			else {				
 			try {
-				QADialog qaDialog;
-				if(editflag && page.getQAData()!=null)
-				qaDialog = new QADialog(page.getQAData(), QADialog.WRITE_MODE);
-				else { 
+				QADialogCreator qaDialog;
+//				if(editflag )
+				qaDialog = new QADialogCreator(page.getQAData(), QADialogCreator.WRITE_MODE);
+//				else { 
 				//insight questions
-				qGenerator = new InsightQuestions();
-				qaDialog = new QADialog(qGenerator.getGeneratedQuestions(), QADialog.WRITE_MODE);}
-				
+//				qGenerator = new InsightQuestions();
+//				qaDialog = new QADialogCreator(qGenerator.getGeneratedQuestions(), QADialogCreator.WRITE_MODE);
+//				}			
 				qaDialog.showDialog();
 				page.setQAData(qaDialog.getQAData());
 				EncryptFile();
@@ -232,14 +229,18 @@ public class WriteDiaryPanelCreator{
 	}
 	
 	public void updateEditFields(DiaryPage newpage) {
-		editflag = true;
 		page = newpage;
-		contentfield.setEnabled(true);
-		rating.setEnabled(true);
+		toggleComponents(true);
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));	
 		dayInfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 		contentfield.setText(page.getContent());
 		rating.setSelection(page.getRating());
+	}
+	
+	public void toggleComponents(boolean switcher) {
+		contentfield.setEnabled(switcher);
+		rating.setEnabled(switcher);
+		next.setEnabled(switcher);
 	}
 	
 	

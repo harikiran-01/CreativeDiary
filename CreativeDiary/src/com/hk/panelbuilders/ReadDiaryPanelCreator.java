@@ -68,7 +68,7 @@ public class ReadDiaryPanelCreator{
 		//insights
 		insightButton = new JButton("VIEW INSIGHTS");
 		insightButton.setVisible(false);
-		insightButton.setBounds(261, 505, 122, 23);
+		insightButton.setBounds(188, 62, 122, 23);
 	}
 	
 	
@@ -121,7 +121,7 @@ public class ReadDiaryPanelCreator{
 		//insight button action
 		insightButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				QADialog qa = new QADialog(page.getQAData(), QADialog.READ_MODE);	
+				QADialogCreator qa = new QADialogCreator(page.getQAData(), QADialogCreator.READ_MODE);	
 				qa.showDialog();
 			}
 		});

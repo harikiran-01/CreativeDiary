@@ -13,6 +13,7 @@ public class SQAPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private JLabel question;
 	private JTextArea answerField;
+	
 	public SQAPanel(String ques, String answer) {
 		initComponents(ques, answer);
 		question.setText(ques);
@@ -25,7 +26,7 @@ public class SQAPanel extends JPanel{
 	}
 	
 	private void initComponents(String ques, String answer) {
-		question = new JLabel(ques, 10);
+		question = new JLabel(ques);
 		answerField = new JTextArea(2, 30);
 		answerField.setText(answer);
 	}
