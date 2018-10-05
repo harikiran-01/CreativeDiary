@@ -25,8 +25,9 @@ public class QADialogCreator {
 	
 	public QADialogCreator(List<QA> receivedList, int accessmode) {	
 		initComponents();
-		if(receivedList==null)
-			qaList = new InsightQuestions().getGeneratedQuestions();
+		if(receivedList==null) {
+			System.out.println("gen fired");
+			qaList = new InsightQuestions().getGeneratedQuestions();}
 		else
 		this.qaList = receivedList;
 		generateQAPanels(accessmode);
@@ -78,8 +79,10 @@ public class QADialogCreator {
 	private void generateQAPanels(int accessmode) {			
 		for(int i=0; i<totalq; i++) {
 		SQAPanel sqa = new SQAPanel(qaList.get(i).getQuestion(), qaList.get(i).getAnswer());	
+		
 		if(accessmode == READ_MODE)
 		sqa.setAnswerFieldViewable();
+		
 		qaListPanel.add(sqa);
 		}
 	}

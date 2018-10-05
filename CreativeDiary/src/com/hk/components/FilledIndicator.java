@@ -7,34 +7,40 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import com.hk.panelbuilders.ReadDiaryPanelCreator;
 import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
 
 public class FilledIndicator implements Runnable{
-	private JDateChooser dateChooser;
-	
-	public FilledIndicator(JDateChooser dateChooser) {
-		this.dateChooser = dateChooser;
-	}
+	private JDateChooser dateChooser = ReadDiaryPanelCreator.dateChooser;
+	public static HighlightEvaluator evaluator = new HighlightEvaluator();
 
 	@Override
-	public void run() {
-		HighlightEvaluator evaluator = new HighlightEvaluator();
-	     for(Date filled : getFilledDates())  {  
-	    	 evaluator.add(filled);
-	     }
+	public void run() {		
+	     evaluator.setDates(getFilledDates());
 		 dateChooser.getJCalendar().getDayChooser().addDateEvaluator(evaluator);
+//		 dateChooser.getJCalendar().getDayChooser().removeDateEvaluator(evaluator);
 	}
 	
-	private static class HighlightEvaluator implements IDateEvaluator {
-		private final List<Date> list = new ArrayList<>();
+	public static class HighlightEvaluator implements IDateEvaluator {
+		private final Date blankDate = DateConverter.convertfromCustom(new CustomDate(0, 0, 0));
+		private List<Date> list = new ArrayList<>();
 		public void add(Date date) {
 	        list.add(date);
 	    }
 		
+		public void remove(Date date) {
+			list.set(list.indexOf(date), blankDate);
+	    }
+		
+		public void setDates(List<Date> dates) {
+	        list.addAll(dates);
+	    }
+		
 		@Override
 		public Color getInvalidBackroundColor() {
-			return null;
+			return Color.RED;
 		}
 
 		@Override

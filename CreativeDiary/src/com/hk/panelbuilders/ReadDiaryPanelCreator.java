@@ -6,13 +6,20 @@ import com.hk.ui.HomePage;
 import com.toedter.calendar.JDateChooser;
 import com.hk.components.*;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Calendar;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 
 public class ReadDiaryPanelCreator{
@@ -20,11 +27,12 @@ public class ReadDiaryPanelCreator{
 	private JLabel lblEnterDate;
 	private JTextArea contentField;
 	private JScrollPane contentScroll;
-	private JButton btnSearch, btnEdit, insightButton; 
-	private JDateChooser dateChooser;
+	private JButton btnSearch, btnEdit, insightButton, btnDelete; 
+	public static JDateChooser dateChooser;
 	private StarRater rating;
 	private DiaryPage page;
 	private JLabel lblRating;
+	public final boolean ADD_ENTRY = true, DELETE_ENTRY = false;
 	
 	private void initComponents() {
 		//read diary panel
@@ -53,7 +61,6 @@ public class ReadDiaryPanelCreator{
 		btnSearch.setBounds(321, 22, 95, 23);
 		//edit button
 		btnEdit = new JButton("EDIT");
-		btnEdit.setVisible(false);
 		btnEdit.setBounds(426, 22, 64, 23);
 		//diary page
 		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
@@ -67,8 +74,10 @@ public class ReadDiaryPanelCreator{
 		rating.setBounds(82, 62, 88, 23);
 		//insights
 		insightButton = new JButton("VIEW INSIGHTS");
-		insightButton.setVisible(false);
 		insightButton.setBounds(188, 62, 122, 23);
+		//delete entry
+		btnDelete = new JButton("DELETE");
+		btnDelete.setBounds(321, 62, 95, 23);
 	}
 	
 	
@@ -81,12 +90,13 @@ public class ReadDiaryPanelCreator{
 		readDiaryPanel.add(rating);
 		readDiaryPanel.add(lblRating);
 		readDiaryPanel.add(insightButton);
+		readDiaryPanel.add(btnDelete);
+		toggleComponents(false);
 	}
 	
 	public ReadDiaryPanelCreator() {
 		initComponents();
 		addComponents();
-		displayHighlights();
 		//search button action
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -94,12 +104,10 @@ public class ReadDiaryPanelCreator{
 					page = getDiaryPage(DateConverter.convertDate(dateChooser));	
 					if(page.getContent().equals("")) {
 						page.setContent("Wow! Such Empty");
-						btnEdit.setVisible(false);
-						insightButton.setVisible(false);
+						toggleComponents(false);
 					}
-					else {
-						btnEdit.setVisible(true);
-						insightButton.setVisible(true);}
+					else 
+						toggleComponents(true);
 					contentField.setText(page.getContent().trim());
 					contentField.setCaretPosition(0);
 					rating.setSelection(page.getRating());
@@ -125,16 +133,38 @@ public class ReadDiaryPanelCreator{
 				qa.showDialog();
 			}
 		});
+		
+		//delete button action
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(new File(reviseFileName(page.getDate())).delete()) {
+					page = new DiaryPage();
+					HighlightsEditor(DELETE_ENTRY, page.getDate());
+					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Entry Deleted!",
+							"Delete Entry",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
+							new ImageIcon("green_tick.png"));
+				}
+				else
+					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Delete Failed!",
+							"Delete Entry",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
+				
+			}
+		});
+	}
+	
+	public String reviseFileName(CustomDate date) {
+		return StorageSpace.currentpath+"\\"+
+                Integer.toString(date.getYear())+"\\"
+		          +Integer.toString(date.getMonth())+"\\"+Integer.toString(date.getDay())+".txt";
 	}
 	
 	public DiaryPage getDiaryPage(CustomDate date) throws IOException, ClassNotFoundException {
 		DiaryPage page;
-		String filename = StorageSpace.currentpath+"\\"+date.getYear()+"\\"+date.getMonth()+"\\"+date.getDay()+".txt";
-		if(!new File(filename).exists()) {
+		if(!new File(reviseFileName(date)).exists()) {
 			page = new DiaryPage();
 		}
 		else {
-			FileInputStream file = new FileInputStream(filename);
+			FileInputStream file = new FileInputStream(reviseFileName(date));
 			ObjectInputStream in = new ObjectInputStream(file);   
 			page = (DiaryPage)in.readObject();
 			in.close();
@@ -144,23 +174,45 @@ public class ReadDiaryPanelCreator{
 	}
 	
 	public void updateFields(DiaryPage newpage) throws ClassNotFoundException {
-		displayHighlights();
-		btnEdit.setVisible(true);
-		insightButton.setVisible(true);
 		page = newpage;
+		toggleComponents(true);		
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
 			contentField.setText(page.getContent());
 			rating.setSelection(page.getRating());
+	}
+	
+	public void toggleComponents(boolean switcher) {
+		btnEdit.setEnabled(switcher);
+		insightButton.setEnabled(switcher);
+		btnDelete.setEnabled(switcher);
 	}
 	
 	public JPanel getPanel() {
 		return readDiaryPanel;
 	}
 	
-	
-	
-	public void displayHighlights() {
-		 Thread t = new Thread(new FilledIndicator(dateChooser));
-		 t.start();
+	public void HighlightsEditor(boolean status, CustomDate date) {
+		Calendar c = Calendar.getInstance();
+		 c.set(Calendar.YEAR, date.getYear());
+		 c.set(Calendar.MONTH, date.getMonth()-1);
+		 c.set(Calendar.DAY_OF_MONTH, date.getDay());
+		 c.set(Calendar.HOUR_OF_DAY, 0);
+	     c.set(Calendar.MINUTE, 0);
+	     c.set(Calendar.SECOND, 0);
+	     c.set(Calendar.MILLISECOND, 0);
+		if(status == ADD_ENTRY) {
+		    FilledIndicator.evaluator.add(c.getTime());
+			}
+		else {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dateChooser.getDate());
+			JPanel jpanel = dateChooser.getJCalendar().getDayChooser().getDayPanel();
+			Component component[] = jpanel.getComponents();
+			         for(int i=7; i<10; i++)
+			        	 
+			         FilledIndicator.evaluator.remove(c.getTime());
+			    }
+//		dateChooser.repaint();
+//		dateChooser.revalidate();
 	}
 }

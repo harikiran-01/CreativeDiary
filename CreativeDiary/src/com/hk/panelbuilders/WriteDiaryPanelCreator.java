@@ -130,6 +130,7 @@ public class WriteDiaryPanelCreator{
 					} 
 				}
 				else{
+					page = new DiaryPage(DateConverter.convertDate(dateChooser), "", 0);
 					contentfield.setText("Start writing here");
 					rating.setSelection(0);
 					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
@@ -159,17 +160,9 @@ public class WriteDiaryPanelCreator{
 			}
 			else {				
 			try {
-				QADialogCreator qaDialog;
-//				if(editflag )
-				qaDialog = new QADialogCreator(page.getQAData(), QADialogCreator.WRITE_MODE);
-//				else { 
-				//insight questions
-//				qGenerator = new InsightQuestions();
-//				qaDialog = new QADialogCreator(qGenerator.getGeneratedQuestions(), QADialogCreator.WRITE_MODE);
-//				}			
-				qaDialog.showDialog();
-				page.setQAData(qaDialog.getQAData());
+				InsightQuestionDialog();
 				EncryptFile();
+				HomePage.read.HighlightsEditor(HomePage.read.ADD_ENTRY, page.getDate());
 				JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
 						"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
 						new ImageIcon("green_tick.png"));
@@ -185,6 +178,13 @@ public class WriteDiaryPanelCreator{
 		return StorageSpace.currentpath+"\\"+
                 Integer.toString(page.getDate().getYear())+"\\"
 		          +Integer.toString(page.getDate().getMonth())+"\\"+Integer.toString(page.getDate().getDay())+".txt";
+	}
+	
+	private void InsightQuestionDialog() {
+		QADialogCreator qaDialog;
+		qaDialog = new QADialogCreator(page.getQAData(), QADialogCreator.WRITE_MODE);		
+		qaDialog.showDialog();
+		page.setQAData(qaDialog.getQAData());
 	}
 	
 	private void EncryptFile() throws IOException {

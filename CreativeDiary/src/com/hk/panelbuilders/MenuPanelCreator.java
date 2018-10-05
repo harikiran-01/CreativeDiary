@@ -26,7 +26,6 @@ public class MenuPanelCreator {
 		//read diary action
 		btnReadDiary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				HomePage.read.displayHighlights();
 				HomePage.replacePanel(HomePage.read.getPanel());
 			}
 		});
