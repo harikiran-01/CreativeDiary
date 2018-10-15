@@ -12,26 +12,23 @@ import com.hk.panelbuilders.ReadDiaryPanelCreator;
 import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
 
-public class FilledIndicator implements Runnable{
+public class FilledIndicator{
 	private JDateChooser dateChooser = ReadDiaryPanelCreator.dateChooser;
 	public static HighlightEvaluator evaluator = new HighlightEvaluator();
 
-	@Override
-	public void run() {		
-	     evaluator.setDates(getFilledDates());
+	public FilledIndicator() {
+		evaluator.setDates(getFilledDates());
 		 dateChooser.getJCalendar().getDayChooser().addDateEvaluator(evaluator);
-//		 dateChooser.getJCalendar().getDayChooser().removeDateEvaluator(evaluator);
 	}
 	
 	public static class HighlightEvaluator implements IDateEvaluator {
-		private final Date blankDate = DateConverter.convertfromCustom(new CustomDate(0, 0, 0));
 		private List<Date> list = new ArrayList<>();
 		public void add(Date date) {
 	        list.add(date);
 	    }
 		
 		public void remove(Date date) {
-			list.set(list.indexOf(date), blankDate);
+			list.remove(list.indexOf(date));
 	    }
 		
 		public void setDates(List<Date> dates) {

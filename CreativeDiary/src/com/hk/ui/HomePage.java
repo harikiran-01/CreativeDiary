@@ -1,7 +1,5 @@
 package com.hk.ui;
 import javax.swing.*;
-
-import com.hk.components.FilledIndicator;
 import com.hk.panelbuilders.*;
 
 public class HomePage{
@@ -28,8 +26,6 @@ public class HomePage{
 			//read diary panel creator
 			read = new ReadDiaryPanelCreator();
 			//highlighting dates for initial launch
-			Thread t = new Thread(new FilledIndicator());
-			t.start();
 			//menu panel
 			menuPanel = new MenuPanelCreator().getPanel();
 			//diary container panel

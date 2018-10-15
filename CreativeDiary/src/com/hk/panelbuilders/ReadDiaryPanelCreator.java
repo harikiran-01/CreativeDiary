@@ -18,8 +18,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 
 public class ReadDiaryPanelCreator{
@@ -110,8 +108,7 @@ public class ReadDiaryPanelCreator{
 						toggleComponents(true);
 					contentField.setText(page.getContent().trim());
 					contentField.setCaretPosition(0);
-					rating.setSelection(page.getRating());
-	
+					rating.setSelection(page.getRating());	
 			}
 			catch(IOException | ClassNotFoundException e) {
 				System.out.println(e);}
@@ -138,11 +135,11 @@ public class ReadDiaryPanelCreator{
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(new File(reviseFileName(page.getDate())).delete()) {
-					page = new DiaryPage();
-					HighlightsEditor(DELETE_ENTRY, page.getDate());
+					HighlightsEditor(DELETE_ENTRY, page.getDate());								
 					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Entry Deleted!",
 							"Delete Entry",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
 							new ImageIcon("green_tick.png"));
+					page = new DiaryPage();	
 				}
 				else
 					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Delete Failed!",
@@ -204,15 +201,14 @@ public class ReadDiaryPanelCreator{
 		    FilledIndicator.evaluator.add(c.getTime());
 			}
 		else {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(dateChooser.getDate());
-			JPanel jpanel = dateChooser.getJCalendar().getDayChooser().getDayPanel();
-			Component component[] = jpanel.getComponents();
-			         for(int i=7; i<10; i++)
-			        	 
-			         FilledIndicator.evaluator.remove(c.getTime());
+			System.out.println("passed date"+date);
+			System.out.println("delete detected for"+c.getTime());
+			FilledIndicator.evaluator.remove(c.getTime());
+			// DeletedIndicator.evaluator1.add(c.getTime());
+			
 			    }
-//		dateChooser.repaint();
-//		dateChooser.revalidate();
+		dateChooser.repaint();
+		dateChooser.revalidate();
+		
 	}
 }

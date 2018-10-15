@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+import com.hk.components.FilledIndicator;
 import com.hk.ui.HomePage;
 
 public class MenuPanelCreator {
@@ -55,6 +55,8 @@ public class MenuPanelCreator {
 		btnWriteDiary = new JButton("Write Diary");
 		//read button
 		btnReadDiary = new JButton("Read Diary");
+		//indicator
+		FilledIndicator f = new FilledIndicator();
 		//exit button
 		btnExit = new JButton("Exit");
 	}
