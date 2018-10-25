@@ -39,9 +39,7 @@ public class DiaryPage implements Serializable{
 	}
 	
 	public DiaryPage() {
-		this.date = new CustomDate(0, 0, 0);
-		this.content = "";
-		this.rating = 0;
+		this(new CustomDate(0,0,0), "", 0);
 	}
 	
 	public DiaryPage(CustomDate date, String content, int rating) {

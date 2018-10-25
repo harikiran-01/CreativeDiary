@@ -11,8 +11,7 @@ public class QA implements Serializable{
 	private String answer;
 	
 	public QA(String question){
-		this.question = question;
-		this.answer = "";
+		this(question, "");
 	}
 	
 	public QA(String question, String answer){

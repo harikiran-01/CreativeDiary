@@ -30,9 +30,9 @@ public class InsightQuestions {
 		timeq.add(new QA("Do you wish you had done anything differently?"));
 		timeq.add(new QA("What is the most nicest thing you've done today?"));
 		List<QA> habitsq = new ArrayList<QA>();
-		habitsq.add(new QA("Did you pick on any new habits today?"));
+		habitsq.add(new QA("Did you pick up any new habits today?"));
 		habitsq.add(new QA("How much time have you spent on your favourite hobbies?"));
-		habitsq.add(new QA("Are you proud of any special thing you acheived in your hobby?"));
+		habitsq.add(new QA("Are you proud of any special thing you acheived in regards to your hobby?"));
 		
 		questions.add(personq);
 		questions.add(timeq);
