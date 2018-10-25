@@ -3,7 +3,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import com.hk.ui.HomePage;
-import com.toedter.calendar.JDateChooser;
 import com.hk.components.*;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,13 +19,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
-public class ReadDiaryPanelCreator{
+public class ReadDiaryPanelCreator extends ReadWriteUtils{
 	private JPanel readDiaryPanel;
 	private JLabel lblEnterDate;
 	private JTextArea contentField;
 	private JScrollPane contentScroll;
 	private JButton btnSearch, btnEdit, insightButton, btnDelete; 
-	public static JDateChooser dateChooser;
 	private StarRater rating;
 	private DiaryPage page;
 	private JLabel lblRating;
@@ -42,8 +40,6 @@ public class ReadDiaryPanelCreator{
 		lblEnterDate.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblEnterDate.setBounds(114, 27, 87, 14);
 		//date chooser
-		dateChooser = new JDateChooser(CurrentDay.getDate());
-		dateChooser.setSelectableDateRange(DateConverter.convertfromCustom(CurrentUser.getInstance().getDob()), CurrentDay.getDate());
 		dateChooser.setBounds(189, 23, 122, 20);
 		//content Field
 		contentField = new JTextArea("hello, select a date to relive your memory");
@@ -135,6 +131,9 @@ public class ReadDiaryPanelCreator{
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(new File(reviseFileName(page.getDate())).delete()) {
+					rating.setSelection(0);
+					contentField.setText("Wow! Such Empty");
+					toggleComponents(false);
 					HighlightsEditor(DELETE_ENTRY, page.getDate());								
 					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Entry Deleted!",
 							"Delete Entry",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
@@ -197,18 +196,11 @@ public class ReadDiaryPanelCreator{
 	     c.set(Calendar.MINUTE, 0);
 	     c.set(Calendar.SECOND, 0);
 	     c.set(Calendar.MILLISECOND, 0);
-		if(status == ADD_ENTRY) {
+		if(status == ADD_ENTRY) 
 		    FilledIndicator.evaluator.add(c.getTime());
-			}
-		else {
-			System.out.println("passed date"+date);
-			System.out.println("delete detected for"+c.getTime());
-			FilledIndicator.evaluator.remove(c.getTime());
-			// DeletedIndicator.evaluator1.add(c.getTime());
-			
-			    }
+		else 
+			FilledIndicator.evaluator.remove(c.getTime());			
 		dateChooser.repaint();
-		dateChooser.revalidate();
-		
+		dateChooser.revalidate();		
 	}
 }

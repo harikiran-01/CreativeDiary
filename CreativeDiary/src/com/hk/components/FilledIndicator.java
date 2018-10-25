@@ -8,17 +8,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.panelbuilders.ReadDiaryPanelCreator;
 import com.toedter.calendar.IDateEvaluator;
-import com.toedter.calendar.JDateChooser;
 
 public class FilledIndicator{
-	private JDateChooser dateChooser = ReadDiaryPanelCreator.dateChooser;
 	public static HighlightEvaluator evaluator = new HighlightEvaluator();
 
 	public FilledIndicator() {
 		evaluator.setDates(getFilledDates());
-		 dateChooser.getJCalendar().getDayChooser().addDateEvaluator(evaluator);
 	}
 	
 	public static class HighlightEvaluator implements IDateEvaluator {

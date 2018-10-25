@@ -55,7 +55,7 @@ public class MenuPanelCreator {
 		btnWriteDiary = new JButton("Write Diary");
 		//read button
 		btnReadDiary = new JButton("Read Diary");
-		//indicator
+		//highlight indicator
 		FilledIndicator f = new FilledIndicator();
 		//exit button
 		btnExit = new JButton("Exit");

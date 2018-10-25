@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
-import com.toedter.calendar.JDateChooser;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
@@ -14,13 +13,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-public class WriteDiaryPanelCreator{
+public class WriteDiaryPanelCreator extends ReadWriteUtils{
 	private UserProfile currentuser = CurrentUser.getInstance();
 	private JPanel writeDiaryPanel;
 	private JLabel greetMessage,dayInfo,lblPickDate;
 	private JTextArea contentfield;
 	private JScrollPane contentScroll;
-	private JDateChooser dateChooser;
 	private JButton next,setDate;
 	private DiaryPage page;
 	private StarRater rating; 
@@ -39,8 +37,6 @@ public class WriteDiaryPanelCreator{
 		lblPickDate.setFont(new Font("Viner Hand ITC", Font.PLAIN, 16));
 		lblPickDate.setBounds(352, 9, 81, 25);
 		//date chooser
-		dateChooser = new JDateChooser(CurrentDay.getDate());	
-		dateChooser.setDateFormatString("dd MM yyyy");
 		dateChooser.setBounds(443, 9, 91, 20);
 		//day info
 		dayInfo = new JLabel("Click SET to select the date");
@@ -103,7 +99,6 @@ public class WriteDiaryPanelCreator{
 			if(dateBoundary()) {
 				toggleComponents(true);
 				//to check if date within boundaries has been set atleast once
-				isDateSet = true;
 				//to check if set is pressed while in same page
 				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 				CustomDate lastDate = page.getDate();
