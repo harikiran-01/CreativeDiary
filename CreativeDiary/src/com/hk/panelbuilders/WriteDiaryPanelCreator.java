@@ -17,8 +17,6 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 	private UserProfile currentuser = CurrentUser.getInstance();
 	private JPanel writeDiaryPanel;
 	private JLabel greetMessage,dayInfo,lblPickDate;
-	private JTextArea contentfield;
-	private JScrollPane contentScroll;
 	private JButton next,setDate;
 	private DiaryPage page;
 	private StarRater rating; 
@@ -42,12 +40,7 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 		dayInfo = new JLabel("Click SET to select the date");
 		dayInfo.setBounds(22, 61, 286, 14);
 		//content field
-		contentfield = new JTextArea("Start writing here");
-		contentfield.setWrapStyleWord(true);
-		contentfield.setLineWrap(true);
-		//content scroll pane
-		contentScroll = new JScrollPane(contentfield);
-		contentScroll.setBounds(10,96, 608, 380);
+		contentField.setText("Start writing here");
 		//set date button
 		setDate = new JButton("SET");
 		setDate.setBounds(544, 9, 74, 23);
@@ -79,16 +72,16 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 		addComponents();
 		
 		//content field focus
-		contentfield.addFocusListener(new FocusAdapter() {
+		contentField.addFocusListener(new FocusAdapter() {
 		@Override
 		public void focusGained(FocusEvent arg0) {
-			if(contentfield.getText().equals("Start writing here"))
-				contentfield.setText("");
+			if(contentField.getText().equals("Start writing here"))
+				contentField.setText("");
 		}
 		@Override
 		public void focusLost(FocusEvent arg0) {
-			if(contentfield.getText().equals(""))
-				contentfield.setText("Start writing here");
+			if(contentField.getText().equals(""))
+				contentField.setText("Start writing here");
 		}
 	});	
 		
@@ -126,7 +119,7 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 				}
 				else{
 					page = new DiaryPage(DateConverter.convertDate(dateChooser), "", 0);
-					contentfield.setText("Start writing here");
+					contentField.setText("Start writing here");
 					rating.setSelection(0);
 					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 				}
@@ -145,7 +138,7 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 	//save button action
 		next.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-			page.setContent(contentfield.getText());
+			page.setContent(contentField.getText());
 			page.setRating(rating.getSelection());
 			if(page.getContent().equals("") || page.getContent().equals("Start writing here"))
 			{
@@ -228,12 +221,12 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 		toggleComponents(true);
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));	
 		dayInfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
-		contentfield.setText(page.getContent());
+		contentField.setText(page.getContent());
 		rating.setSelection(page.getRating());
 	}
 	
 	public void toggleComponents(boolean switcher) {
-		contentfield.setEnabled(switcher);
+		contentField.setEnabled(switcher);
 		rating.setEnabled(switcher);
 		next.setEnabled(switcher);
 	}

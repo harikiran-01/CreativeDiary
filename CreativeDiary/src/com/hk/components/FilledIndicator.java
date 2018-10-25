@@ -58,7 +58,7 @@ public class FilledIndicator{
 
 		@Override
 		public String getSpecialTooltip() {
-			return "filled";
+			return null;
 		}
 
 		@Override
