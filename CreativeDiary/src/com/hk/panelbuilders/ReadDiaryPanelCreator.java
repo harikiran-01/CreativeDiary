@@ -6,9 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,8 +18,6 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 	private JPanel readDiaryPanel;
 	private JLabel lblEnterDate;
 	private JButton btnSearch, btnEdit, insightButton, btnDelete; 
-	private StarRater rating;
-	private DiaryPage page;
 	private JLabel lblRating;
 	
 	
@@ -45,14 +41,11 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 		//edit button
 		btnEdit = new JButton("EDIT");
 		btnEdit.setBounds(426, 22, 64, 23);
-		//diary page
-		page = new DiaryPage(new CustomDate(0, 0, 0), "", 0);
 		//rating label
 		lblRating = new JLabel("Rating: ");
 		lblRating.setFont(new Font("Stencil", Font.PLAIN, 14));
 		lblRating.setBounds(22, 65, 81, 14);
 		//star rating
-		rating = new StarRater();
 		rating.setEnabled(false);
 		rating.setBounds(82, 62, 88, 23);
 		//insights
@@ -84,7 +77,8 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					page = getDiaryPage(DateConverter.convertDate(dateChooser));	
+					page.setDate(DateConverter.convertDate(dateChooser));
+					page = getDiaryPage(page.getDate());	
 					if(page.getContent().equals("")) {
 						page.setContent("Wow! Such Empty");
 						toggleComponents(false);
@@ -119,11 +113,11 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 		//delete button action
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(new File(reviseFileName(page.getDate())).delete()) {
+				if(new File(reviseFileName()).delete()) {
 					rating.setSelection(0);
 					contentField.setText("Wow! Such Empty");
 					toggleComponents(false);
-					HighlightsEditor(DELETE_ENTRY, page.getDate());								
+					HighlightsManager(DELETE_ENTRY, page.getDate());								
 					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Entry Deleted!",
 							"Delete Entry",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
 							new ImageIcon("green_tick.png"));
@@ -135,27 +129,6 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 				
 			}
 		});
-	}
-	
-	public String reviseFileName(CustomDate date) {
-		return StorageSpace.currentpath+"\\"+
-                Integer.toString(date.getYear())+"\\"
-		          +Integer.toString(date.getMonth())+"\\"+Integer.toString(date.getDay())+".txt";
-	}
-	
-	public DiaryPage getDiaryPage(CustomDate date) throws IOException, ClassNotFoundException {
-		DiaryPage page;
-		if(!new File(reviseFileName(date)).exists()) {
-			page = new DiaryPage();
-		}
-		else {
-			FileInputStream file = new FileInputStream(reviseFileName(date));
-			ObjectInputStream in = new ObjectInputStream(file);   
-			page = (DiaryPage)in.readObject();
-			in.close();
-			file.close();
-		}
-		return page;
 	}
 	
 	public void updateFields(DiaryPage newpage) throws ClassNotFoundException {

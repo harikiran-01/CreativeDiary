@@ -25,9 +25,8 @@ public class QADialogCreator {
 	
 	public QADialogCreator(List<QA> receivedList, int accessmode) {	
 		initComponents();
-		if(receivedList==null) {
-			System.out.println("gen fired");
-			qaList = new InsightQuestions().getGeneratedQuestions();}
+		if(receivedList==null) 
+			qaList = new InsightQuestions().getGeneratedQuestions();
 		else
 		this.qaList = receivedList;
 		generateQAPanels(accessmode);

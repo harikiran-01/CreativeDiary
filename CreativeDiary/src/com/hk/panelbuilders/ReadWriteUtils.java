@@ -1,5 +1,9 @@
 package com.hk.panelbuilders;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Calendar;
 
 import javax.swing.JScrollPane;
@@ -9,13 +13,18 @@ import com.hk.components.CurrentDay;
 import com.hk.components.CurrentUser;
 import com.hk.components.CustomDate;
 import com.hk.components.DateConverter;
+import com.hk.components.DiaryPage;
 import com.hk.components.FilledIndicator;
+import com.hk.components.StarRater;
+import com.hk.components.StorageSpace;
 import com.toedter.calendar.JDateChooser;
 
 public abstract class ReadWriteUtils {
+	protected DiaryPage page;
 	protected JDateChooser dateChooser;
 	protected JTextArea contentField;
 	protected JScrollPane contentScroll;
+	protected StarRater rating;
 	protected final boolean ADD_ENTRY = true, DELETE_ENTRY = false;
 	
 	public ReadWriteUtils() {
@@ -24,6 +33,8 @@ public abstract class ReadWriteUtils {
 	}
 	
 	private void init() {
+		//diary page
+		page = new DiaryPage();
 		//date chooser
 		dateChooser = new JDateChooser(CurrentDay.getDate());	
 		dateChooser.setDateFormatString("dd MM yyyy");
@@ -36,9 +47,32 @@ public abstract class ReadWriteUtils {
 		//content scroll pane
 		contentScroll = new JScrollPane(contentField);
 		contentScroll.setBounds(10,96, 608, 380);
+		//star rater
+		rating = new StarRater();
 	}
 	
-	public void HighlightsEditor(boolean status, CustomDate date) {
+	public String reviseFileName() {
+		return StorageSpace.currentpath+"\\"+
+                Integer.toString(page.getDate().getYear())+"\\"
+		          +Integer.toString(page.getDate().getMonth())+"\\"+Integer.toString(page.getDate().getDay())+".txt";
+	}
+	
+	public DiaryPage getDiaryPage(CustomDate date) throws IOException, ClassNotFoundException {
+		DiaryPage page;
+		if(new File(reviseFileName()).exists()) {
+			FileInputStream file = new FileInputStream(reviseFileName());
+			ObjectInputStream in = new ObjectInputStream(file);   
+			page = (DiaryPage)in.readObject();
+			in.close();
+			file.close();
+			
+		}
+		else 
+			page = new DiaryPage();
+		return page;
+	}
+	
+	public void HighlightsManager(boolean status, CustomDate date) {
 		Calendar c = Calendar.getInstance();
 		 c.set(Calendar.YEAR, date.getYear());
 		 c.set(Calendar.MONTH, date.getMonth()-1);
