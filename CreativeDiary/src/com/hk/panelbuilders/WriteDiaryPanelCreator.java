@@ -116,12 +116,11 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 					} 
 				}
 				else{
-					page = new DiaryPage(DateConverter.convertDate(dateChooser), "", 0);
-					contentField.setText("Start writing here");
-					rating.setSelection(0);
-					dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
+					resetDiaryPage();
 				}
 				}
+				else if(!isAlreadyWritten())
+					resetDiaryPage();
 			}
 			else{
 				if(isDateSet) {
@@ -218,6 +217,13 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 		dayInfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 		contentField.setText(page.getContent());
 		rating.setSelection(page.getRating());
+	}
+	
+	public void resetDiaryPage() {
+		page = new DiaryPage(DateConverter.convertDate(dateChooser), "", 0);
+		contentField.setText("Start writing here");
+		rating.setSelection(0);
+		dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
 	}
 	
 	public void toggleComponents(boolean switcher) {
