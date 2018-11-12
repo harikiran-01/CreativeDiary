@@ -13,12 +13,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-public class WriteDiaryPanelCreator extends ReadWriteUtils{
+public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	private UserProfile currentuser = CurrentUser.getInstance();
 	private JPanel writeDiaryPanel;
 	private JLabel greetMessage,dayInfo,lblPickDate;
 	private JButton next,setDate; 
 	private boolean isDateSet = false;
+	public boolean panelupdated = false;
+
 	
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
@@ -34,6 +36,8 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 		lblPickDate.setBounds(352, 9, 81, 25);
 		//date chooser
 		dateChooser.setBounds(443, 9, 91, 20);
+		System.out.println("before set jd "+dateChooser.getDateFormatString());
+		System.out.println("bfore set pd "+page.getDate());
 		//day info
 		dayInfo = new JLabel("Click SET to select the date");
 		dayInfo.setBounds(22, 61, 286, 14);
@@ -62,7 +66,10 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 		
 	}
 	
-	public WriteDiaryPanelCreator(){
+	@Override
+	public void run() {
+
+		
 		initComponents();
 		addComponents();
 		
@@ -83,33 +90,37 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 	//set button action	
 	setDate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-			
-			if(dateBoundary()) {
+			    panelupdated = false;
+				selectedDate = DateConverter.convertDate(dateChooser);
 				toggleComponents(true);
-				isDateSet = true;
-				//to check if date within boundaries has been set atleast once
 				//to check if set is pressed while in same page
-				if(page == null)
-					System.out.println("encount");
-				boolean samepage = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
-				CustomDate lastDate = page.getDate();
-				page.setDate(DateConverter.convertDate(dateChooser));
+				CustomDate lastDate = (page.getDate().equals(new CustomDate()))?DateConverter.convertDate(CurrentDay.getDate()):page.getDate();
+				System.out.println("last date "+lastDate);
+				System.out.println("selected date "+selectedDate);
+				boolean samepage = selectedDate.equals(lastDate);
+				System.out.println("samp is "+samepage);
 				if(!samepage) {
 				if(isAlreadyWritten())
-				{
+				{ 
+					
 					try {
-						page = getDiaryPage(page.getDate());
+						page = getDiaryPage(DateConverter.convertDate(dateChooser));
+						System.out.println("after set pd "+page.getDate());
 						int option = readOrEditDialog();
-						if(option==0) {							
+						if(option==0) {
 							HomePage.read.updateFields(page);
 							HomePage.replacePanel(HomePage.read.getPanel());
+							
+							dateChooser.setDate(DateConverter.convertfromCustom(lastDate));
+							page.setDate(lastDate);
 						}
 						else if(option==1) {
+							panelupdated = true;
 						updateEditFields(page);
 						}
 						else {
 							page.setDate(lastDate);
-								dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));		
+								dateChooser.setDate(DateConverter.convertfromCustom(lastDate));		
 							}
 					} catch (IOException | ClassNotFoundException e) {
 						e.printStackTrace();
@@ -119,16 +130,6 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 					resetDiaryPage();
 				}
 				}
-				else if(!isAlreadyWritten())
-					resetDiaryPage();
-			}
-			else{
-				if(isDateSet) {
-					System.out.println("firedyo");
-					dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));		}
-				else
-					dateChooser.setDate(CurrentDay.getDate());
-			}
 		}
 	});
 	
@@ -160,6 +161,8 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 			}
 		}
 	});
+	
+		
 	}
 	
 	private void InsightQuestionDialog() {
@@ -236,4 +239,6 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils{
 	public JPanel getPanel() {
 		return writeDiaryPanel;
 		}
+
+	
 }

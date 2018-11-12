@@ -14,12 +14,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
-public class ReadDiaryPanelCreator extends ReadWriteUtils{
+public class ReadDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	private JPanel readDiaryPanel;
 	private JLabel lblEnterDate;
 	private JButton btnSearch, btnEdit, insightButton, btnDelete; 
 	private JLabel lblRating;
-	
 	
 	private void initComponents() {
 		//read diary panel
@@ -70,15 +69,17 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 		toggleComponents(false);
 	}
 	
-	public ReadDiaryPanelCreator() {
+	@Override
+	public void run() {
+
 		initComponents();
 		addComponents();
 		//search button action
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				selectedDate = DateConverter.convertDate(dateChooser); 
 				try {
-					page.setDate(DateConverter.convertDate(dateChooser));
-					page = getDiaryPage(page.getDate());	
+					page = getDiaryPage(selectedDate);	
 					if(page.getContent().equals("")) {
 						page.setContent("Wow! Such Empty");
 						toggleComponents(false);
@@ -129,6 +130,7 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 				
 			}
 		});
+	
 	}
 	
 	public void updateFields(DiaryPage newpage) throws ClassNotFoundException {
@@ -148,6 +150,5 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 	public JPanel getPanel() {
 		return readDiaryPanel;
 	}
-	
 	
 }

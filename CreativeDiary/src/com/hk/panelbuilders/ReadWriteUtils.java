@@ -20,8 +20,10 @@ import com.hk.components.StorageSpace;
 import com.toedter.calendar.JDateChooser;
 
 public abstract class ReadWriteUtils {
+	public final DiaryPage blankpage = new DiaryPage();
 	protected DiaryPage page;
 	protected JDateChooser dateChooser;
+	protected CustomDate selectedDate;
 	protected JTextArea contentField;
 	protected JScrollPane contentScroll;
 	protected StarRater rating;
@@ -35,11 +37,14 @@ public abstract class ReadWriteUtils {
 	private void init() {
 		//diary page
 		page = new DiaryPage();
+		
 		//date chooser
 		dateChooser = new JDateChooser(CurrentDay.getDate());	
 		dateChooser.setDateFormatString("dd MM yyyy");
 		dateChooser.setSelectableDateRange(DateConverter.convertfromCustom(CurrentUser.getInstance().getDob()), CurrentDay.getDate());
 		dateChooser.getJCalendar().getDayChooser().addDateEvaluator(FilledIndicator.evaluator);
+		//selected date
+		selectedDate = new CustomDate();
 		//content field
 		contentField = new JTextArea();
 		contentField.setWrapStyleWord(true);
@@ -53,8 +58,8 @@ public abstract class ReadWriteUtils {
 	
 	public String reviseFileName() {
 		return StorageSpace.currentpath+"\\"+
-                Integer.toString(page.getDate().getYear())+"\\"
-		          +Integer.toString(page.getDate().getMonth())+"\\"+Integer.toString(page.getDate().getDay())+".txt";
+                Integer.toString(selectedDate.getYear())+"\\"
+		          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
 	}
 	
 	public DiaryPage getDiaryPage(CustomDate date) throws IOException, ClassNotFoundException {

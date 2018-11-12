@@ -23,8 +23,12 @@ public class HomePage{
 			creativeDiary.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			//write diary panel creator
 			write = new WriteDiaryPanelCreator();
+			Thread writePanelThread = new Thread(write);
+			writePanelThread.start();
 			//read diary panel creator
 			read = new ReadDiaryPanelCreator();
+			Thread readPanelThread = new Thread(read);
+			readPanelThread.start();
 			//highlighting dates for initial launch
 			//menu panel
 			menuPanel = new MenuPanelCreator().getPanel();
