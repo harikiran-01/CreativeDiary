@@ -3,11 +3,13 @@ import javax.swing.*;
 import com.hk.panelbuilders.*;
 
 public class HomePage{
-	private static JFrame creativeDiary;
-	public static WriteDiaryPanelCreator write;
-	public static ReadDiaryPanelCreator read;
+	private JFrame creativeDiary;
+	private WriteDiaryPanelCreator write;
+	public ReadDiaryPanelCreator read;
+	public SearchDiaryPanelCreator search;
+	
 	private JPanel menuPanel;
-	private static JPanel diaryContainerPanel;
+	private JPanel diaryContainerPanel;
 		public HomePage() {
 				initComponents();
 				addComponents();
@@ -29,7 +31,8 @@ public class HomePage{
 			read = new ReadDiaryPanelCreator();
 			Thread readPanelThread = new Thread(read);
 			readPanelThread.start();
-			//highlighting dates for initial launch
+			//search diary panel creator
+			search = new SearchDiaryPanelCreator();
 			//menu panel
 			menuPanel = new MenuPanelCreator().getPanel();
 			//diary container panel
@@ -43,7 +46,7 @@ public class HomePage{
 			creativeDiary.getContentPane().add(diaryContainerPanel);
 		}
 		
-		public static void replacePanel(JPanel replace) {
+		public void replacePanel(JPanel replace) {
 			diaryContainerPanel.removeAll();
 			diaryContainerPanel.repaint();
 			diaryContainerPanel.revalidate();
@@ -52,7 +55,15 @@ public class HomePage{
 			diaryContainerPanel.repaint();
 			diaryContainerPanel.revalidate();
 		}
-		public static JFrame getFrame() {
+		public JFrame getFrame() {
 			return creativeDiary;
+		}
+		
+		public void disposeScreen() {
+			creativeDiary.dispose();
+		}
+		
+		public WriteDiaryPanelCreator getWriteDiaryPage() {
+			return write;
 		}
 }

@@ -7,15 +7,22 @@ import javax.swing.*;
 import com.hk.panelbuilders.loginPanelCreator;
 import com.hk.panelbuilders.signupPanelCreator;
 
+import core.CDCore;
+
 public class LockPage {
-	public static JFrame UserLogin = new JFrame("Creative Diary Login");
+	
+	private JFrame UserLogin;
 	private JTabbedPane optionTab;
 	public LockPage(){
 		UserLogin = new JFrame("Creative Diary Login");
 		initLockScreen();
 	}
 	public static void main(String[] args) throws Exception {
-		new LockPage();
+		CDCore.getLockPage();
+	}
+	
+	public void disposeScreen() {
+		UserLogin.dispose();
 	}
 	
 	public void initLockScreen() {
@@ -29,7 +36,7 @@ public class LockPage {
 		optionTab.addTab("Log In", new loginPanelCreator().getPanel());
 		optionTab.addTab("Sign Up", new signupPanelCreator().getPanel());		
 	}
-	public static Component getFrame() {
+	public Component getFrame() {
 		return UserLogin;
 	}
 }

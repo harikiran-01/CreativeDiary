@@ -1,7 +1,8 @@
 package com.hk.panelbuilders;
 import javax.swing.*;
 import com.hk.components.*;
-import com.hk.ui.HomePage;
+import core.CDCore;
+
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
@@ -18,8 +19,6 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	private JPanel writeDiaryPanel;
 	private JLabel greetMessage,dayInfo,lblPickDate;
 	private JButton next,setDate; 
-	private boolean isDateSet = false;
-	public boolean panelupdated = false;
 
 	
 	private void initComponents() {
@@ -90,7 +89,6 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	//set button action	
 	setDate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-			    panelupdated = false;
 				selectedDate = DateConverter.convertDate(dateChooser);
 				toggleComponents(true);
 				//to check if set is pressed while in same page
@@ -104,18 +102,15 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 				{ 
 					
 					try {
-						page = getDiaryPage(DateConverter.convertDate(dateChooser));
-						System.out.println("after set pd "+page.getDate());
+						page = getDiaryPage();
 						int option = readOrEditDialog();
 						if(option==0) {
-							HomePage.read.updateFields(page);
-							HomePage.replacePanel(HomePage.read.getPanel());
-							
+							CDCore.getHomePage().read.updateFields(page);
+							CDCore.getHomePage().replacePanel(CDCore.getHomePage().read.getPanel());							
 							dateChooser.setDate(DateConverter.convertfromCustom(lastDate));
 							page.setDate(lastDate);
 						}
 						else if(option==1) {
-							panelupdated = true;
 						updateEditFields(page);
 						}
 						else {
@@ -140,7 +135,7 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 			if(contentField.getText().equals("") || contentField.getText().equals("Start writing here"))
 			{
 				Object[] option = {"I get it","My Bad!"};
-				JOptionPane.showOptionDialog(HomePage.getFrame(),"Uh Oh! Can't save an empty page",
+				JOptionPane.showOptionDialog(CDCore.getHomePage().getFrame(),"Uh Oh! Can't save an empty page",
 						"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
 			}
 			else {	
@@ -152,7 +147,7 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 				HighlightsManager(ADD_ENTRY, page.getDate());
 				}
 				EncryptFile();				
-				JOptionPane.showConfirmDialog(HomePage.getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
+				JOptionPane.showConfirmDialog(CDCore.getHomePage().getFrame(),"Diary Updated! If you want to make changes, edit and save again!",
 						"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
 						new ImageIcon("green_tick.png"));
 			} catch (IOException e) {
@@ -181,27 +176,6 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	    outputStream.close();
 	}
 	
-	public boolean dateBoundary() {
-		Object[] option = {"I get it","My Bad"};
-		if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(CurrentDay.getDate()))) {
-			return true;
-		}
-		else if(new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate()).equals(new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(currentuser.getDob())))) {
-			return true;
-		}
-		else if(dateChooser.getDate().after(CurrentDay.getDate())) {
-			JOptionPane.showOptionDialog(HomePage.getFrame(),"We strongly believe you can't know your future",
-					"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
-			return false;
-		}	
-		else if(dateChooser.getDate().before(DateConverter.convertfromCustom(currentuser.getDob()))){
-			JOptionPane.showOptionDialog(HomePage.getFrame(),"Well we don't see those dates in your life",
-					"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
-			return false;
-		}
-		return true;
-	}
-	
 	public boolean isAlreadyWritten() {
 		File f = new File(reviseFileName());
 		return f.length()!=0;
@@ -209,12 +183,13 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	
 	public int readOrEditDialog() {
 		Object[] option = {"Read","Edit"};
-		return JOptionPane.showOptionDialog(HomePage.getFrame(),"You already updated diary for this day. Do you want to edit?",
+		return JOptionPane.showOptionDialog(CDCore.getHomePage().getFrame(),"You already updated diary for this day. Do you want to edit?",
 				"",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,option,option[0]);
 	}
 	
 	public void updateEditFields(DiaryPage newpage) {
 		page = newpage;
+		selectedDate = page.getDate();
 		toggleComponents(true);
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));	
 		dayInfo.setText("You are editing entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));

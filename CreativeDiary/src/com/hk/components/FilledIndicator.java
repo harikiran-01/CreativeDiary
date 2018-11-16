@@ -11,6 +11,7 @@ import java.util.List;
 import com.toedter.calendar.IDateEvaluator;
 
 public class FilledIndicator{
+	public static int totalcount = 0;
 	public static HighlightEvaluator evaluator = new HighlightEvaluator();
 
 	public FilledIndicator() {
@@ -22,6 +23,10 @@ public class FilledIndicator{
 		public void add(Date date) {
 	        list.add(date);
 	    }
+		
+		public List<Date> getDates(){
+			return list;
+		}
 		
 		public void remove(Date date) {
 			list.remove(list.indexOf(date));
@@ -72,7 +77,7 @@ public class FilledIndicator{
 		}
 	}
 	
-	private List<Date> getFilledDates() {
+	public static List<Date> getFilledDates() {
 		List<Date> filledDates = new ArrayList<Date>();
 		String filename = StorageSpace.currentpath;
 		File folder = new File(filename);
@@ -105,6 +110,7 @@ public class FilledIndicator{
 						     c.set(Calendar.SECOND, 0);
 						     c.set(Calendar.MILLISECOND, 0);
 							 filledDates.add(c.getTime());
+							 totalcount++;
 						}
 					}
 				}

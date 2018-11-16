@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Calendar;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -62,19 +63,18 @@ public abstract class ReadWriteUtils {
 		          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
 	}
 	
-	public DiaryPage getDiaryPage(CustomDate date) throws IOException, ClassNotFoundException {
-		DiaryPage page;
+	public DiaryPage getDiaryPage() throws IOException, ClassNotFoundException {
+		DiaryPage temppage;
 		if(new File(reviseFileName()).exists()) {
 			FileInputStream file = new FileInputStream(reviseFileName());
 			ObjectInputStream in = new ObjectInputStream(file);   
-			page = (DiaryPage)in.readObject();
+			temppage = (DiaryPage)in.readObject();
 			in.close();
-			file.close();
-			
+			file.close();			
 		}
 		else 
-			page = new DiaryPage();
-		return page;
+			temppage = new DiaryPage();
+		return temppage;
 	}
 	
 	public void HighlightsManager(boolean status, CustomDate date) {
@@ -93,4 +93,6 @@ public abstract class ReadWriteUtils {
 		dateChooser.repaint();
 		dateChooser.revalidate();		
 	}
+	
+	public abstract JPanel getPanel();
 }
