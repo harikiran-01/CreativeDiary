@@ -3,11 +3,13 @@ import javax.swing.*;
 import com.hk.panelbuilders.*;
 
 public class HomePage{
-	private static JFrame creativeDiary;
-	public static WriteDiaryPanelCreator write;
-	public static ReadDiaryPanelCreator read;
+	private JFrame creativeDiary;
+	private WriteDiaryPanelCreator write;
+	public ReadDiaryPanelCreator read;
+	public SearchDiaryPanelCreator search;
+	
 	private JPanel menuPanel;
-	private static JPanel diaryContainerPanel;
+	private JPanel diaryContainerPanel;
 		public HomePage() {
 				initComponents();
 				addComponents();
@@ -23,9 +25,14 @@ public class HomePage{
 			creativeDiary.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			//write diary panel creator
 			write = new WriteDiaryPanelCreator();
+			Thread writePanelThread = new Thread(write);
+			writePanelThread.start();
 			//read diary panel creator
 			read = new ReadDiaryPanelCreator();
-			//highlighting dates for initial launch
+			Thread readPanelThread = new Thread(read);
+			readPanelThread.start();
+			//search diary panel creator
+			search = new SearchDiaryPanelCreator();
 			//menu panel
 			menuPanel = new MenuPanelCreator().getPanel();
 			//diary container panel
@@ -39,7 +46,7 @@ public class HomePage{
 			creativeDiary.getContentPane().add(diaryContainerPanel);
 		}
 		
-		public static void replacePanel(JPanel replace) {
+		public void replacePanel(JPanel replace) {
 			diaryContainerPanel.removeAll();
 			diaryContainerPanel.repaint();
 			diaryContainerPanel.revalidate();
@@ -48,7 +55,15 @@ public class HomePage{
 			diaryContainerPanel.repaint();
 			diaryContainerPanel.revalidate();
 		}
-		public static JFrame getFrame() {
+		public JFrame getFrame() {
 			return creativeDiary;
+		}
+		
+		public void disposeScreen() {
+			creativeDiary.dispose();
+		}
+		
+		public WriteDiaryPanelCreator getWriteDiaryPage() {
+			return write;
 		}
 }

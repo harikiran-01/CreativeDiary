@@ -6,7 +6,9 @@ import javax.swing.*;
 import com.hk.components.InsightQuestions;
 import com.hk.components.QA;
 import com.hk.components.SQAPanel;
-import com.hk.ui.HomePage;
+
+import core.CDCore;
+
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,7 +63,7 @@ public class QADialogCreator {
 
 	private void initComponents() {
 		//qa Dialog
-		qaDialog = new JDialog(HomePage.getFrame(), "Questions", true);
+		qaDialog = new JDialog(CDCore.getHomePage().getFrame(), "Questions", true);
 		qaDialog.setSize(500, totalq*100);	
 		qaDialog.setResizable(false);
 		//qa list
@@ -100,7 +102,7 @@ public class QADialogCreator {
 	
 	public void showDialog() {  
 		qaDialog.setContentPane(filledPanel);
-		qaDialog.setLocationRelativeTo(HomePage.getFrame());
+		qaDialog.setLocationRelativeTo(CDCore.getHomePage().getFrame());
 		qaDialog.setVisible(true);
 	}
 	

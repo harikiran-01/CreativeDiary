@@ -5,24 +5,20 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
 import com.hk.components.CurrentUser;
 import com.hk.components.UserProfile;
-import com.hk.ui.HomePage;
-import com.hk.ui.LockPage;
+
+import core.CDCore;
 
 public class loginPanelCreator extends AccessControls implements ActionListener{	
-	private static JPanel loginPanel =  new JPanel();
 	private JButton login;
 	private JLabel status;
 	private JProgressBar load;
 	int loadcount;
 	Timer t;
 	private void initComponents() {
-		//login panel
-		loginPanel.setLayout(null);
 		//username label
 		ulabel.setBounds(70, 18, 103, 14);
 		//username field
@@ -48,13 +44,16 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 	}
 
 	private void addComponents() {
-	loginPanel.add(login);
-	loginPanel.add(load);
-	loginPanel.add(status);
+	loginSignupPanel.add(login);
+	loginSignupPanel.add(load);
+	loginSignupPanel.add(status);
+	}
+	
+	public void resetFields() {
+		initComponents();
 	}
 	
 	public loginPanelCreator(){	
-		super(loginPanel);
 		initComponents();
 		addComponents();
 		
@@ -88,14 +87,10 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		if(loadcount==2)
 		{
-			new HomePage();
-			LockPage.UserLogin.dispose();		 
+			CDCore.getHomePage();
+			CDCore.getLockPage().disposeScreen();		 
 		}
 		loadcount++;
 		load.setValue(loadcount);
 	}
-	
-public JPanel getPanel() {
-	return loginPanel;
-}
 }

@@ -1,22 +1,21 @@
 package com.hk.panelbuilders;
 import javax.swing.*;
 import com.hk.components.*;
-import com.hk.ui.LockPage;
 import com.toedter.calendar.JDateChooser;
+
+import core.CDCore;
+
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class signupPanelCreator extends AccessControls{
-	private static JPanel signupPanel = new JPanel();
 	private JButton register;
 	private JLabel doblabel;
 	JDateChooser dateChooser;
 	
 	private void initComponents() {
-		//signup panel
-		signupPanel.setLayout(null);
 		//username label
 		ulabel.setBounds(70, 18, 103, 14);
 		//username field
@@ -38,20 +37,19 @@ public class signupPanelCreator extends AccessControls{
 		}
 
 	private void addComponents() {
-		signupPanel.add(doblabel);
-		signupPanel.add(dateChooser);
-		signupPanel.add(register);	
+		loginSignupPanel.add(doblabel);
+		loginSignupPanel.add(dateChooser);
+		loginSignupPanel.add(register);	
 	}
 	
 	public signupPanelCreator() {
-		super(signupPanel);
 		initComponents();
 		addComponents();
 		
 		//register button action
 		register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showConfirmDialog(LockPage.getFrame(),"Congrats! You are registered",
+				JOptionPane.showConfirmDialog(CDCore.getLockPage().getFrame(),"Congrats! You are registered",
 						"Registration Successful",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
 						new ImageIcon("green_tick.png"));
 				getStoredUserData();
@@ -86,9 +84,5 @@ public void storeUser(List<UserProfile> users) {
 			System.out.println(e);
 		}
         f.setReadOnly();
-	}
-
-	public JPanel getPanel() {
-		return signupPanel;
 	}
 }

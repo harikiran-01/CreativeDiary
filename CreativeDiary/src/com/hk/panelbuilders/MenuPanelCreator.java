@@ -3,46 +3,61 @@ package com.hk.panelbuilders;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import com.hk.components.FilledIndicator;
-import com.hk.ui.HomePage;
+import com.hk.ui.LockPage;
+
+import core.CDCore;
 
 public class MenuPanelCreator {
 	private JPanel menuPanel;
-	private JButton btnWriteDiary, btnReadDiary, btnExit;
+	private JButton btnWriteDiary, btnReadDiary, btnSearch, btnExit;
 	public MenuPanelCreator() {
 		initComponents();
 		addComponents();
 		//write button action
 		btnWriteDiary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				HomePage.replacePanel(HomePage.write.getPanel());
+				CDCore.getHomePage().replacePanel(CDCore.getHomePage().getWriteDiaryPage().getPanel());
 			}
 		});
 		
 		//read diary action
 		btnReadDiary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				HomePage.replacePanel(HomePage.read.getPanel());
+				CDCore.getHomePage().replacePanel(CDCore.getHomePage().read.getPanel());
+			}
+		});
+		
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CDCore.getHomePage().replacePanel(CDCore.getHomePage().search.getPanel());
 			}
 		});
 		
 		//exit button action
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int choice = JOptionPane.showConfirmDialog(HomePage.getFrame(), "Any unsaved information will be lost. Are you sure?",
-						"Exit",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-				if(choice==0) 
-				HomePage.getFrame().dispose();}	
+//				int choice = JOptionPane.showConfirmDialog(HomePage.getFrame(), "Any unsaved information will be lost. Are you sure?",
+//						"Exit",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+//				if(choice==0) 
+//				HomePage.getFrame().dispose();
+				CDCore.getHomePage().disposeScreen();
+				CDCore.resetEverything();
+				try {
+					LockPage.main( new String[0]);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				}	
 		});
 	}
 	
 	private void addComponents() {
 		menuPanel.add(btnWriteDiary);
 		menuPanel.add(btnReadDiary);
+		menuPanel.add(btnSearch);
 		menuPanel.add(btnExit);
 	}
 
@@ -55,7 +70,10 @@ public class MenuPanelCreator {
 		btnWriteDiary = new JButton("Write Diary");
 		//read button
 		btnReadDiary = new JButton("Read Diary");
+		//search button
+		btnSearch = new JButton("Search");
 		//highlight indicator
+		@SuppressWarnings("unused")
 		FilledIndicator f = new FilledIndicator();
 		//exit button
 		btnExit = new JButton("Exit");

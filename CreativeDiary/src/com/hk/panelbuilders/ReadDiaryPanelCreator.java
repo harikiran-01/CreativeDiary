@@ -1,25 +1,19 @@
 package com.hk.panelbuilders;
-import javax.swing.JPanel;
-import com.hk.ui.HomePage;
 import com.hk.components.*;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import core.CDCore;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
-public class ReadDiaryPanelCreator extends ReadWriteUtils{
+public class ReadDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	private JPanel readDiaryPanel;
 	private JLabel lblEnterDate;
 	private JButton btnSearch, btnEdit, insightButton, btnDelete; 
 	private JLabel lblRating;
-	
 	
 	private void initComponents() {
 		//read diary panel
@@ -70,15 +64,17 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 		toggleComponents(false);
 	}
 	
-	public ReadDiaryPanelCreator() {
+	@Override
+	public void run() {
+
 		initComponents();
 		addComponents();
 		//search button action
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				selectedDate = DateConverter.convertDate(dateChooser); 
 				try {
-					page.setDate(DateConverter.convertDate(dateChooser));
-					page = getDiaryPage(page.getDate());	
+					page = getDiaryPage();	
 					if(page.getContent().equals("")) {
 						page.setContent("Wow! Such Empty");
 						toggleComponents(false);
@@ -97,8 +93,8 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 		//edit button action
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				HomePage.replacePanel(HomePage.write.getPanel());
-				HomePage.write.updateEditFields(page);
+				CDCore.getHomePage().getWriteDiaryPage().updateEditFields(page);
+				CDCore.getHomePage().replacePanel(CDCore.getHomePage().getWriteDiaryPage().getPanel());				
 			}
 		});	
 		
@@ -118,21 +114,23 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 					contentField.setText("Wow! Such Empty");
 					toggleComponents(false);
 					HighlightsManager(DELETE_ENTRY, page.getDate());								
-					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Entry Deleted!",
+					JOptionPane.showConfirmDialog(CDCore.getHomePage().getFrame(),"Entry Deleted!",
 							"Delete Entry",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
 							new ImageIcon("green_tick.png"));
 					page = new DiaryPage();	
 				}
 				else
-					JOptionPane.showConfirmDialog(HomePage.getFrame(),"Delete Failed!",
+					JOptionPane.showConfirmDialog(CDCore.getHomePage().getFrame(),"Delete Failed!",
 							"Delete Entry",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
 				
 			}
 		});
+	
 	}
 	
 	public void updateFields(DiaryPage newpage) throws ClassNotFoundException {
 		page = newpage;
+		selectedDate = page.getDate();
 		toggleComponents(true);		
 		dateChooser.setDate(DateConverter.convertfromCustom(page.getDate()));
 			contentField.setText(page.getContent());
@@ -144,10 +142,9 @@ public class ReadDiaryPanelCreator extends ReadWriteUtils{
 		insightButton.setEnabled(switcher);
 		btnDelete.setEnabled(switcher);
 	}
-	
+	@Override
 	public JPanel getPanel() {
 		return readDiaryPanel;
 	}
-	
 	
 }
