@@ -49,10 +49,6 @@ public class loginPanelCreator extends AccessControls implements ActionListener{
 	loginSignupPanel.add(status);
 	}
 	
-	public void resetFields() {
-		initComponents();
-	}
-	
 	public loginPanelCreator(){	
 		initComponents();
 		addComponents();

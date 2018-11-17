@@ -11,7 +11,6 @@ import java.util.List;
 import com.toedter.calendar.IDateEvaluator;
 
 public class FilledIndicator{
-	public static int totalcount = 0;
 	public static HighlightEvaluator evaluator = new HighlightEvaluator();
 
 	public FilledIndicator() {
@@ -110,7 +109,6 @@ public class FilledIndicator{
 						     c.set(Calendar.SECOND, 0);
 						     c.set(Calendar.MILLISECOND, 0);
 							 filledDates.add(c.getTime());
-							 totalcount++;
 						}
 					}
 				}

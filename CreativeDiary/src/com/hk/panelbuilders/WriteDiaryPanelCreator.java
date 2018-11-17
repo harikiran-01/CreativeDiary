@@ -19,7 +19,7 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	private JPanel writeDiaryPanel;
 	private JLabel greetMessage,dayInfo,lblPickDate;
 	private JButton next,setDate; 
-
+	private boolean updatedonce = false;
 	
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
@@ -35,8 +35,6 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 		lblPickDate.setBounds(352, 9, 81, 25);
 		//date chooser
 		dateChooser.setBounds(443, 9, 91, 20);
-		System.out.println("before set jd "+dateChooser.getDateFormatString());
-		System.out.println("bfore set pd "+page.getDate());
 		//day info
 		dayInfo = new JLabel("Click SET to select the date");
 		dayInfo.setBounds(22, 61, 286, 14);
@@ -89,39 +87,49 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	//set button action	
 	setDate.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-				selectedDate = DateConverter.convertDate(dateChooser);
-				toggleComponents(true);
-				//to check if set is pressed while in same page
-				CustomDate lastDate = (page.getDate().equals(new CustomDate()))?DateConverter.convertDate(CurrentDay.getDate()):page.getDate();
-				System.out.println("last date "+lastDate);
-				System.out.println("selected date "+selectedDate);
-				boolean samepage = selectedDate.equals(lastDate);
-				System.out.println("samp is "+samepage);
-				if(!samepage) {
-				if(isAlreadyWritten())
-				{ 
+				
+			selectedDate = DateConverter.convertDate(dateChooser);
+			toggleComponents(true);				
+			CustomDate lastDate =  page.getDate();
+			boolean samepage = selectedDate.equals(lastDate);
+			if(!samepage || !updatedonce) {
+			if(isAlreadyWritten())
+			{ 					
+				try {
+					System.out.println(reviseFileName());
+					page = getDiaryPage();
+					System.out.println("page date "+page.getDate());
+					int option = readOrEditDialog();
+					if(option==0) {
+						
+					CDCore.getHomePage().read.updateFields(page);
+					CDCore.getHomePage().replacePanel(CDCore.getHomePage().read.getPanel());
+					if(updatedonce) {
+					dateChooser.setDate(DateConverter.convertfromCustom(lastDate));
+					page.setDate(lastDate);
+					}
+					else {
+						dateChooser.setDate(CurrentDay.getDate());
+						page.setDate(CurrentDay.getasCustomDate());
+					}
+					dateChooser.repaint();
+					dateChooser.revalidate();
 					
-					try {
-						page = getDiaryPage();
-						int option = readOrEditDialog();
-						if(option==0) {
-							CDCore.getHomePage().read.updateFields(page);
-							CDCore.getHomePage().replacePanel(CDCore.getHomePage().read.getPanel());							
-							dateChooser.setDate(DateConverter.convertfromCustom(lastDate));
-							page.setDate(lastDate);
 						}
 						else if(option==1) {
+						updatedonce = true;
 						updateEditFields(page);
 						}
 						else {
 							page.setDate(lastDate);
-								dateChooser.setDate(DateConverter.convertfromCustom(lastDate));		
+							dateChooser.setDate(DateConverter.convertfromCustom(lastDate));		
 							}
 					} catch (IOException | ClassNotFoundException e) {
 						e.printStackTrace();
 					} 
 				}
 				else{
+					updatedonce = true;
 					resetDiaryPage();
 				}
 				}

@@ -45,11 +45,7 @@ public class MenuPanelCreator {
 //				HomePage.getFrame().dispose();
 				CDCore.getHomePage().disposeScreen();
 				CDCore.resetEverything();
-				try {
-					LockPage.main( new String[0]);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				CDCore.getLockPage();
 				}	
 		});
 	}

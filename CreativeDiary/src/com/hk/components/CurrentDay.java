@@ -15,6 +15,9 @@ public class CurrentDay{
 		return c.get(Calendar.YEAR);
 	}
 	public static Date getDate() {
-		return new Date();
+		return c.getTime();
+	}
+	public static CustomDate getasCustomDate() {
+		return DateConverter.convertDate(c.getTime());
 	}
 }
