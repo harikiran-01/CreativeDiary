@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import com.hk.components.FilledIndicator;
-import com.hk.ui.LockPage;
 
 import core.CDCore;
 
@@ -29,7 +28,7 @@ public class MenuPanelCreator {
 				CDCore.getHomePage().replacePanel(CDCore.getHomePage().read.getPanel());
 			}
 		});
-		
+		//search diary action
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CDCore.getHomePage().replacePanel(CDCore.getHomePage().search.getPanel());
@@ -51,6 +50,7 @@ public class MenuPanelCreator {
 	}
 	
 	private void addComponents() {
+		System.out.println("ading to menu");
 		menuPanel.add(btnWriteDiary);
 		menuPanel.add(btnReadDiary);
 		menuPanel.add(btnSearch);

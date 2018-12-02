@@ -11,6 +11,7 @@ public class HomePage{
 	private JPanel menuPanel;
 	private JPanel diaryContainerPanel;
 		public HomePage() {
+				System.out.println("creating homepage");
 				initComponents();
 				addComponents();
 			}
@@ -41,7 +42,9 @@ public class HomePage{
 		
 		private void addComponents() {
 			//adding menu panel to frame
-			creativeDiary.getContentPane().add(menuPanel);
+			creativeDiary.add(menuPanel);
+			creativeDiary.repaint();
+			creativeDiary.revalidate();
 			//adding diary container panel to frame
 			creativeDiary.getContentPane().add(diaryContainerPanel);
 		}
