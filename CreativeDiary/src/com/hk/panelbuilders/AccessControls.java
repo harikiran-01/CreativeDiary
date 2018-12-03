@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -15,26 +17,22 @@ import com.hk.components.UserProfile;
 public abstract class AccessControls {
 	protected File f;
 	protected final String filename = "userdetails.yo";
+	public JPanel loginSignupPanel;
 	protected JLabel ulabel;
 	protected JLabel plabel;
 	protected JTextField userName;
 	protected JPasswordField passwordField;
-	protected List<UserProfile> users;
+	protected JCheckBox rememberMe;
+	protected List<UserProfile> users = new ArrayList<UserProfile>();
 	public AccessControls() {
 		initComponents();
-	}
-	public AccessControls(JPanel accessPanel) {
-		this();
-		addComponents(accessPanel);
-	}
-	private void addComponents(JPanel accessPanel) {
-		accessPanel.add(ulabel);
-		accessPanel.add(userName);
-		accessPanel.add(plabel);
-		accessPanel.add(passwordField);
+		addComponents();
 	}
 
 	private void initComponents() {
+		//login panel
+		loginSignupPanel = new JPanel();
+		loginSignupPanel.setLayout(null);
 		//file
 		f = new File(filename);
 		//username label
@@ -45,6 +43,16 @@ public abstract class AccessControls {
 		plabel = new JLabel("Enter Passcode");
 		//password field
 		passwordField = new JPasswordField(15);	
+		//save credentials checkbox
+		rememberMe = new JCheckBox("Remember Me");
+	}
+	
+	private void addComponents() {
+		loginSignupPanel.add(ulabel);
+		loginSignupPanel.add(userName);
+		loginSignupPanel.add(plabel);
+		loginSignupPanel.add(passwordField);
+		loginSignupPanel.add(rememberMe);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -64,7 +72,7 @@ public abstract class AccessControls {
 	        }	         
 	        catch(IOException ex)
 	        {
-	            System.out.println("IOException is caughte");
+	            System.out.println("IOException is caught while reading user details file");
 	        }
 		 	catch(ClassNotFoundException ex)
 	        {
@@ -74,6 +82,8 @@ public abstract class AccessControls {
 			return true;
 	}
 	
-	public abstract JPanel getPanel();
+	public JPanel getPanel() {
+		return loginSignupPanel;
+	}
 
 }
