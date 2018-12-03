@@ -20,10 +20,11 @@ public class DiaryApp {
 		}
 		MenuModel menu = new MenuModel();
 		MenuScreen menuView = new MenuScreen();
-		DiaryContainerModel diaryContainer = new DiaryContainerModel();
-		DiaryContainerScreen diaryContainerView = new DiaryContainerScreen();
+		DiaryContainerModel diaryCardModel = new DiaryContainerModel();
+		DiaryContainerScreen diaryCard = new DiaryContainerScreen();
 		HomePageModel home  = new HomePageModel();
-		HomePageScreen homeView = new HomePageScreen(menuView, diaryContainerView);
-		HomePageController homeController = new HomePageController(menu, menuView, diaryContainer, diaryContainerView);
+		HomePageScreen homeView = new HomePageScreen(menuView, diaryCard);
+		ReadWriteView readwriteScreen = new ReadWriteView();
+		HomePageController homeController = new HomePageController(menu, menuView, diaryCardModel, diaryCard, readwriteScreen);
 	}
 }

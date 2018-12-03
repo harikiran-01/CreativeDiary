@@ -1,5 +1,9 @@
 package com.hk.Models;
 
-public class HomePageModel {
+import javax.swing.JPanel;
 
+import com.hk.Views.DiaryContainerScreen;
+
+public class HomePageModel {
+	
 }

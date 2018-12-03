@@ -21,6 +21,9 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	private JButton next,setDate; 
 	private boolean updatedonce = false;
 	
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	private void initComponents() {
 		writeDiaryPanel = new JPanel();
 		writeDiaryPanel.setLayout(null);

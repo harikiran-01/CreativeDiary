@@ -34,7 +34,7 @@ abstract class AccessControlsModel {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static boolean scanStoredUserData() {
+	public boolean scanStoredUserData() {
 			//reading existing data
 			f.setReadOnly();
 			if(f.length() == 0)
