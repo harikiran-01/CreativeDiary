@@ -9,7 +9,6 @@ public class DiaryApp {
 	public static void main(String[] args) { 
 		LoginScreenModel login = new LoginScreenModel();
 		LoginScreen loginView = new LoginScreen();
-		LockPageModel lock = new LockPageModel();
 		LockPageScreen lockView = new LockPageScreen(loginView);
 		LockPageController lockController = new LockPageController(loginView, login);
 		while(true) {
@@ -22,9 +21,7 @@ public class DiaryApp {
 		MenuScreen menuView = new MenuScreen();
 		DiaryContainerModel diaryCardModel = new DiaryContainerModel();
 		DiaryContainerScreen diaryCard = new DiaryContainerScreen();
-		HomePageModel home  = new HomePageModel();
 		HomePageScreen homeView = new HomePageScreen(menuView, diaryCard);
-		ReadWriteView readwriteScreen = new ReadWriteView();
-		HomePageController homeController = new HomePageController(menu, menuView, diaryCardModel, diaryCard, readwriteScreen);
+		HomePageController homeController = new HomePageController(homeView, menu, menuView, diaryCardModel, diaryCard);
 	}
 }

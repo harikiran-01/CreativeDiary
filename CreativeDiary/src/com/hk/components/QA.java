@@ -10,13 +10,17 @@ public class QA implements Serializable{
 	private String question;
 	private String answer;
 	
+	public QA(){
+		this("QUESTION", "ANSWER");
+	}
+	
 	public QA(String question){
 		this(question, "");
 	}
 	
 	public QA(String question, String answer){
-		this.question = question;
-		this.answer = answer;
+		setQuestion(question);
+		setAnswer(answer);
 	}
 
 	public String getQuestion() {

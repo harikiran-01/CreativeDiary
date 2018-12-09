@@ -2,30 +2,41 @@ package com.hk.Controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 
 import com.hk.Models.DiaryContainerModel;
-import com.hk.Models.HomePageModel;
 import com.hk.Models.MenuModel;
+import com.hk.Models.QAModel;
+import com.hk.Models.ReadWriteModel;
 import com.hk.Views.DiaryContainerScreen;
 import com.hk.Views.HomePageScreen;
 import com.hk.Views.MenuScreen;
+import com.hk.Views.QAScreen;
 import com.hk.Views.ReadWriteView;
+import com.hk.components.CurrentDay;
+import com.hk.components.DateConverter;
 
 public class HomePageController {
-	MenuModel menu;
-	MenuScreen menuView;
-	DiaryContainerModel diaryCardModel;
-	DiaryContainerScreen diaryCard;
-	ReadWriteView readwriteScreen;
-	
-	public HomePageController(MenuModel menu, MenuScreen menuView, DiaryContainerModel diaryCardModel, DiaryContainerScreen diaryCard, ReadWriteView readwriteScreen) {
+	private HomePageScreen homeView;
+	private MenuModel menu;
+	private MenuScreen menuView;
+	private DiaryContainerModel diaryCardModel;
+	private DiaryContainerScreen diaryCard;
+	private ReadWriteView readwriteScreen;
+	private ReadWriteModel readWrite;
+	private ReadWriteController rw;
+
+	public HomePageController(HomePageScreen homeView, MenuModel menu, MenuScreen menuView, DiaryContainerModel diaryCardModel, DiaryContainerScreen diaryCard) {
+		this.homeView = homeView;
 		this.menu = menu;
 		this.menuView = menuView;
 		this.diaryCardModel = diaryCardModel;
 		this.diaryCard = diaryCard;
-		this.readwriteScreen = readwriteScreen;
+		readwriteScreen = new ReadWriteView();
+		readWrite = new ReadWriteModel();
+		rw = new ReadWriteController(readWrite, readwriteScreen);
 		
 		menuView.addReadButtonListener(new ActionListener() {		
 			@Override
@@ -33,6 +44,8 @@ public class HomePageController {
 				fetchCard(readwriteScreen);
 			}
 		});
+		
+		
 		
 	}
 	

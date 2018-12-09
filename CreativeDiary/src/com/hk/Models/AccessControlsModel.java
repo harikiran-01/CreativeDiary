@@ -28,7 +28,6 @@ abstract class AccessControlsModel {
 	}
 	
 	public void setCredentials(String userName, String Password) {
-		System.out.println("usr "+userName+" pwd "+Password);
 		this.userName = userName;
 		this.Password = Password;
 	}

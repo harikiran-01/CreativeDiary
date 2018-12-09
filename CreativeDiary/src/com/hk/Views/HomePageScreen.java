@@ -1,6 +1,7 @@
 package com.hk.Views;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class HomePageScreen extends JFrame{
@@ -26,6 +27,12 @@ public class HomePageScreen extends JFrame{
 	private void addComponents() {
 		add(menuPanel);
 		add(diaryPanel);
+	}
+	
+	public void emptyPageError() {
+		Object[] option = {"I get it","My Bad!"};
+		JOptionPane.showOptionDialog(this,"Uh Oh! Can't save an empty page",
+				"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
 	}
 
 }

@@ -209,7 +209,7 @@ public class WriteDiaryPanelCreator extends ReadWriteUtils implements Runnable{
 	}
 	
 	public void resetDiaryPage() {
-		page = new DiaryPage(DateConverter.convertDate(dateChooser), "", 0);
+		page = new DiaryPage(DateConverter.convertDate(dateChooser), "", 0,"");
 		contentField.setText("Start writing here");
 		rating.setSelection(0);
 		dayInfo.setText("You are making entry for: "+ new SimpleDateFormat("dd/MM/yyyy").format(DateConverter.convertfromCustom(page.getDate())));
