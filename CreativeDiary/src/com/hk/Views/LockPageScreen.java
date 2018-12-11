@@ -13,9 +13,9 @@ public class LockPageScreen extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane optionTab;
 	
-	public LockPageScreen(LoginScreen loginView) { 
+	public LockPageScreen(LoginScreen loginView, RegisterScreen register) { 
 		initComponents();
-		addComponents(loginView);		
+		addComponents(loginView, register);		
 	}
 	
 	private void initComponents() {
@@ -27,9 +27,9 @@ public class LockPageScreen extends JFrame{
 		optionTab = new JTabbedPane();
 	}
 	
-	private void addComponents(LoginScreen loginView) {
+	private void addComponents(LoginScreen loginView, RegisterScreen register) {
 		add(optionTab);
 		optionTab.addTab("Log In", loginView);
-		optionTab.addTab("Sign Up", new signupPanelCreator().getPanel());
+		optionTab.addTab("Register", register);
 	}
 }

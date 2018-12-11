@@ -6,7 +6,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 public class LoginScreen extends AccessUtilsView{
-	private JButton login;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JButton btnLogin;
 	private JLabel status;
 	
 	public LoginScreen() {
@@ -37,20 +41,20 @@ public class LoginScreen extends AccessUtilsView{
 		//password field
 		passwordField.setBounds(55, 107, 126, 20);
 		//login button
-		login = new JButton("LOGIN");
-		login.setBounds(67, 147, 97, 23);
+		btnLogin = new JButton("LOGIN");
+		btnLogin.setBounds(67, 147, 97, 23);
 		//login status label
 		status = new JLabel();
 		status.setBounds(37, 193, 190, 40);
 	}
 	
 	private void addComponents() {
-		add(login);
+		add(btnLogin);
 		add(status);
 	}
 	
 	public void addLoginListener(ActionListener loginButtonListener) {
-		login.addActionListener(loginButtonListener);
+		btnLogin.addActionListener(loginButtonListener);
 	}
 	
 }

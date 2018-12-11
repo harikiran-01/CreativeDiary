@@ -2,10 +2,10 @@ package com.hk.Models;
 
 import com.hk.components.UserProfile;
 
-public class LoginScreenModel extends AccessControlsModel{
+public class LoginModel extends AccessControlsModel{
 	UserProfile currentUser;
 	
-	public LoginScreenModel() {
+	public LoginModel() {
 	
 	}
 	

@@ -11,8 +11,25 @@ import com.hk.components.UserProfile;
 
 abstract class AccessControlsModel {
 	String userName, Password;
-	protected static File f = new File("userdetails.yo");
-	private static List<UserProfile> users = new ArrayList<UserProfile>();
+	private File f = new File("userdetails.yo");
+	private UserProfile user = new UserProfile();
+	private List<UserProfile> users = new ArrayList<UserProfile>();
+	
+	public File getUserDataFile() {
+		return f;
+	}
+	
+	public UserProfile getUser() {
+		return user;
+	}
+	
+	public void setUser(UserProfile user) {
+		this.user = user;
+	}
+	
+	public List<UserProfile> getUsers() {
+		return users;
+	}
 	
 	public AccessControlsModel() {
 		init();
@@ -23,9 +40,7 @@ abstract class AccessControlsModel {
 		Password = "";
 	}
 	
-	public List<UserProfile> getUsers() {
-		return users;
-	}
+	
 	
 	public void setCredentials(String userName, String Password) {
 		this.userName = userName;

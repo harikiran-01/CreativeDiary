@@ -17,6 +17,7 @@ public class CurrentDay{
 	public static Date getDate() {
 		return c.getTime();
 	}
+	
 	public static CustomDate getasCustomDate() {
 		return DateConverter.convertDate(c.getTime());
 	}

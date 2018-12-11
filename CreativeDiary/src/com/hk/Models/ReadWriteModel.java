@@ -2,6 +2,7 @@ package com.hk.Models;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,7 +27,7 @@ public class ReadWriteModel {
 		selectedDate = new CustomDate();
 	}
 	
-	private String reviseFileName() {
+	public String reviseFileName() {
 		return StorageSpace.currentpath+"\\"+
                 Integer.toString(selectedDate.getYear())+"\\"
 		          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
@@ -36,14 +37,33 @@ public class ReadWriteModel {
 		return new File(reviseFileName()).exists();
 	}
 	
-	public void fetchDiaryPage() throws IOException, ClassNotFoundException {
-		 
-		if(entryExists()) {
-			FileInputStream file = new FileInputStream(reviseFileName());
-			ObjectInputStream in = new ObjectInputStream(file);   
-			page = (DiaryPage)in.readObject();
-			in.close();
-			file.close();			
+	public void fetchDiaryPage() {	
+		FileInputStream file = null;
+		ObjectInputStream in = null;
+		if(entryExists()) {		
+			try {
+				file = new FileInputStream(reviseFileName());
+				in = new ObjectInputStream(file); 
+				page = (DiaryPage)in.readObject();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			finally
+			{
+				try {
+					in.close();
+					file.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		else {
 			page = new DiaryPage(selectedDate);
@@ -81,6 +101,14 @@ public class ReadWriteModel {
 	
 	public void setLastDate(CustomDate date) {
 		this.lastDate = date;
+	}
+	
+	public CustomDate getLastDate() {
+		return lastDate;
+	}
+	
+	public boolean isContentEmpty(){
+		return page.getContent().equals("Start writing here");
 	}
 	
 	public boolean isSamePage() {

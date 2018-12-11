@@ -2,19 +2,19 @@ package com.hk.Controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import com.hk.Models.LoginScreenModel;
+import java.io.File;
+import com.hk.Models.LoginModel;
+import com.hk.Models.RegisterModel;
 import com.hk.Views.LoginScreen;
+import com.hk.Views.RegisterScreen;
 import com.hk.components.CurrentUser;
+import com.hk.components.UserProfile;
 
 public class LockPageController {
-	private boolean authentication = false;
-	private int counter = 0;
-	private LoginScreen loginView;
-	private LoginScreenModel login;	
+	private boolean authentication = false;	
 	
-	public LockPageController(LoginScreen loginView, LoginScreenModel login) {
-		this.login = login;
-		this.loginView = loginView;
+	public LockPageController(LoginScreen loginView, LoginModel login, RegisterScreen registerView, RegisterModel register) {
+		
 		loginView.addLoginListener(new ActionListener() {		
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -35,10 +35,22 @@ public class LockPageController {
 			}
 		});
 		
-	}
-
-	public LoginScreenModel getLogin() {
-		return login;
+		registerView.addRegisterListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				registerView.registerSuccessAlert();
+				if(register.scanStoredUserData())
+				register.setUser(new UserProfile(registerView.getUserName(), registerView.getDOB() , registerView.getPasswordField()));
+				//creating folder for user
+				File fd = new File("users\\" + register.getUser().getUserName());
+				fd.mkdirs();
+				//adding new user to user list
+				register.getUsers().add(register.getUser());
+				//writing user list back to file
+				register.storeUser(register.getUsers());
+			}
+		});
+		
 	}
 
 	public boolean getLoginStatus() {

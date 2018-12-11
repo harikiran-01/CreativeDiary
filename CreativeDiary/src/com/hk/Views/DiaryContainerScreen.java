@@ -7,10 +7,12 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.AncestorListener;
 
 import com.hk.components.CurrentUser;
 
 public class DiaryContainerScreen extends JPanel{
+	JLabel greetLabel;
 	private JPanel welcomePanel;
 	public DiaryContainerScreen() {
 		initComponents();
@@ -23,9 +25,10 @@ public class DiaryContainerScreen extends JPanel{
 		setBounds(166, 0, 628, 575);
 		setLayout(new CardLayout(0, 0));
 		//greeting label
-		JLabel greetLabel = new JLabel("Welcome "+CurrentUser.getInstance().getUserName()+"! Hope you are having a great day!");
+		greetLabel = new JLabel("Welcome "+CurrentUser.getInstance().getUserName()+"! Hope you are having a great day!");
 		greetLabel.setFont(new Font("MV Boli", Font.BOLD, 16));
 		greetLabel.setBounds(92, 239, 444, 16);
+		
 		//welcome panel
 		welcomePanel = new JPanel();
 		welcomePanel.setLayout(null);	
@@ -34,16 +37,6 @@ public class DiaryContainerScreen extends JPanel{
 	
 	private void addComponents(){
 		add(welcomePanel);
-	}
-	
-	public void replaceView(JPanel replace) {
-		removeAll();
-		repaint();
-		revalidate();
-		
-		add(replace);
-		repaint();
-		revalidate();
 	}
 	
 }

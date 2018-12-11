@@ -19,6 +19,8 @@ import com.hk.components.FilledIndicator;
 import com.hk.components.StarRater;
 import com.toedter.calendar.JDateChooser;
 
+import core.CDCore;
+
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -37,6 +39,7 @@ public class ReadWriteView extends JPanel{
 	private JTextArea contentField;
 	protected JScrollPane contentScroll;
 	protected StarRater ratingBar;
+	private String errorMessage;
 	
 	public ReadWriteView() {
 		initComponents();
@@ -91,7 +94,8 @@ public class ReadWriteView extends JPanel{
 		btnDelete = new JButton("DELETE");
 		btnDelete.setForeground(new Color(255, 0, 0));
 		btnDelete.setBackground(new Color(255, 255, 255));
-		btnDelete.setBounds(518, 62, 89, 23);	
+		btnDelete.setBounds(518, 62, 89, 23);
+		btnDelete.setEnabled(false);
 		//content field
 		contentField = new JTextArea("Start Writing Here");
 		contentField.setBackground(new Color(204, 255, 255));
@@ -127,9 +131,24 @@ public class ReadWriteView extends JPanel{
 				"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
 	}
 	
-	public void successEntry() {
+	public void successEntryAlert() {
 		JOptionPane.showConfirmDialog(getRootPane(),"Diary Updated! If you want to make changes, edit and save again!",
 				"Saved",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,
+				new ImageIcon("green_tick.png"));
+	}
+	
+	public void deletedEntryAlert(boolean success) {
+		int i=0;
+		if(success) {
+			errorMessage = "Entry Deleted!";
+			i = JOptionPane.INFORMATION_MESSAGE;
+		}
+		else {
+			errorMessage = "Delete Failed";
+			i = JOptionPane.ERROR_MESSAGE;
+		}
+		JOptionPane.showConfirmDialog(getParent(),errorMessage,
+				"Delete Entry",JOptionPane.DEFAULT_OPTION,i,
 				new ImageIcon("green_tick.png"));
 	}
 	
@@ -150,6 +169,10 @@ public class ReadWriteView extends JPanel{
 	}
 	public Date getCalendarDate() {
 		return dateChooser.getDate();
+	}
+	
+	public void setCalendarDate(Date d) {
+		dateChooser.setDate(d);
 	}
 	
 	public String getContent() {

@@ -2,13 +2,24 @@ package com.hk.Controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 import com.hk.Models.QAModel;
 import com.hk.Models.ReadWriteModel;
 import com.hk.Views.QAScreen;
 import com.hk.Views.ReadWriteView;
+import com.hk.components.CurrentDay;
+import com.hk.components.CurrentUser;
+import com.hk.components.DateConverter;
+import com.hk.components.DiaryPage;
 import com.hk.components.InsightQuestions;
+
+import core.CDCore;
 
 public class ReadWriteController {
 	ReadWriteModel readWrite;
@@ -20,6 +31,8 @@ public class ReadWriteController {
 		this.readWrite = readWrite;
 		this.readWriteScreen = readWriteScreen;
 		
+		readWriteScreen.setComponentsEnabled(false);
+		
 		qaModel = new QAModel();
 		qaView = new QAScreen();
 		
@@ -27,14 +40,12 @@ public class ReadWriteController {
 		readWriteScreen.addSetButtonListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				readWrite.setSelectedDate(readWriteScreen.getCalendarDate());
+				readWriteScreen.setComponentsEnabled(true);
+				Date datePicker = (Date) readWriteScreen.getCalendarDate();
+				if(datePicker.before(CurrentDay.getDate()) && datePicker.after(DateConverter.convertfromCustom(CurrentUser.getInstance().getDob()))) {
+				readWrite.setSelectedDate(datePicker);
 				if(!readWrite.isSamePage()) {
-				try {
-					readWrite.fetchDiaryPage();
-				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				readWrite.fetchDiaryPage();
 				qaModel.setQaList(readWrite.getPage().getQAData());
 				if(qaModel.getQaList()==null)
 					qaModel.setQaList(new InsightQuestions().getGeneratedQuestions());
@@ -44,12 +55,17 @@ public class ReadWriteController {
 				readWriteScreen.setComponentsEnabled(true);
 				readWriteScreen.fillScreen(readWrite.getPage());
 				readWrite.setLastDate(readWrite.getPage().getDate());				
-					if(readWrite.getPage().equals(readWrite.blankpage))
+					if(readWrite.isContentEmpty())
 					readWriteScreen.setDeleteEnabled(false);
 					else 
-						readWriteScreen.setDeleteEnabled(true);	
+					readWriteScreen.setDeleteEnabled(true);	
 					
 			}
+			}
+				else
+				{
+					readWriteScreen.setCalendarDate(DateConverter.convertfromCustom(readWrite.getLastDate()));
+				}
 			}
 		});
 		
@@ -70,6 +86,23 @@ public class ReadWriteController {
 
 		});
 		
+		readWriteScreen.addDeleteButtonListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(new File(readWrite.reviseFileName()).delete()) {
+					readWrite.fetchDiaryPage();
+					readWriteScreen.fillScreen(readWrite.getPage());
+					readWriteScreen.HighlightsManager(ReadWriteModel.DELETE_ENTRY, readWrite.getSelectedDate());								
+					readWriteScreen.deletedEntryAlert(true);
+					readWriteScreen.setDeleteEnabled(false);
+				}
+				else
+					readWriteScreen.deletedEntryAlert(false);
+					
+			}
+		});
+		
 		qaView.addSaveButtonListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -82,7 +115,8 @@ public class ReadWriteController {
 					e1.printStackTrace();
 				}
 					qaView.dispose();
-					readWriteScreen.successEntry();
+					readWriteScreen.successEntryAlert();
+					readWriteScreen.setDeleteEnabled(true);
 			}
 		});
 		

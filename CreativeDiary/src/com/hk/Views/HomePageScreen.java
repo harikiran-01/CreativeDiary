@@ -34,5 +34,6 @@ public class HomePageScreen extends JFrame{
 		JOptionPane.showOptionDialog(this,"Uh Oh! Can't save an empty page",
 				"",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,null,option,option[0]);
 	}
+	
 
 }

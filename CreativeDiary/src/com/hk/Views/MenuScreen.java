@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class MenuScreen extends JPanel{
-	private JButton btnWriteDiary, btnReadDiary, btnSearch, btnExit;
+	private JButton btnEntry, btnSearch, btnExit;
 	public MenuScreen() {
 		initComponents();
 		addComponents();
@@ -17,31 +17,25 @@ public class MenuScreen extends JPanel{
 		setBounds(0, 2, 167, 575);
 		setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
 		//write button
-		btnWriteDiary = new JButton("Write Diary");
-		//read button
-		btnReadDiary = new JButton("Read Diary");
+		btnEntry = new JButton("My Diary");
 		//search button
 		btnSearch = new JButton("Search");
+		
 		//exit button
 		btnExit = new JButton("Exit");
 	}
 	
 	private void addComponents() {
-		add(btnWriteDiary);
-		add(btnReadDiary);
+		add(btnEntry);
 		add(btnSearch);
 		add(btnExit);
 	}
 	
-	public void addWriteButtonListener(ActionListener write) {
-		btnReadDiary.addActionListener(write);
-	}
-	
-	public void addReadButtonListener(ActionListener read) {
-		btnReadDiary.addActionListener(read);
+	public void addEntryButtonListener(ActionListener write) {
+		btnEntry.addActionListener(write);
 	}
 	
 	public void addSearchButtonListener(ActionListener search) {
-		btnReadDiary.addActionListener(search);
+		btnSearch.addActionListener(search);
 	}
 }
