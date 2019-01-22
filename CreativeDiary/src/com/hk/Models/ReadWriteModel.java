@@ -27,31 +27,38 @@ public class ReadWriteModel {
 		selectedDate = new CustomDate();
 	}
 	
-	public String reviseFileName() {
+	public String reviseFileName(CustomDate dt) {
 		return StorageSpace.currentpath+"\\"+
-                Integer.toString(selectedDate.getYear())+"\\"
-		          +Integer.toString(selectedDate.getMonth())+"\\"+Integer.toString(selectedDate.getDay())+".txt";
+                Integer.toString(dt.getYear())+"\\"
+		          +Integer.toString(dt.getMonth())+"\\"+Integer.toString(dt.getDay())+".txt";
+	}
+	
+	
+	public String reviseFileName() {
+		return reviseFileName(selectedDate);
 	}
 	
 	public boolean entryExists() {
-		return new File(reviseFileName()).exists();
+		return entryExists(selectedDate);
 	}
 	
-	public void fetchDiaryPage() {	
+	public boolean entryExists(CustomDate dt) {
+		return new File(reviseFileName(dt)).exists();
+	}
+	
+	public DiaryPage getPageforDate(CustomDate dt) {
 		FileInputStream file = null;
 		ObjectInputStream in = null;
-		if(entryExists()) {		
+		if(entryExists(dt)) {		
 			try {
-				file = new FileInputStream(reviseFileName());
-				in = new ObjectInputStream(file); 
-				page = (DiaryPage)in.readObject();
+				file = new FileInputStream(reviseFileName(dt));
+				in = new ObjectInputStream(file);			
+				return (DiaryPage)in.readObject();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			finally
@@ -60,15 +67,15 @@ public class ReadWriteModel {
 					in.close();
 					file.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
-		else {
-			page = new DiaryPage(selectedDate);
-		}
-			
+			return new DiaryPage(selectedDate);
+	}
+	
+	public void fetchDiaryPage() {	
+		page = getPageforDate(selectedDate);
 	}
 	
 	public void EncryptFile() throws IOException {
