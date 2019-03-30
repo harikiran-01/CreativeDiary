@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-
 import com.hk.Models.QAModel;
 import com.hk.Models.ReadWriteModel;
 import com.hk.Views.QAScreen;
@@ -16,10 +13,7 @@ import com.hk.Views.ReadWriteView;
 import com.hk.components.CurrentDay;
 import com.hk.components.CurrentUser;
 import com.hk.components.DateConverter;
-import com.hk.components.DiaryPage;
 import com.hk.components.InsightQuestions;
-
-import core.CDCore;
 
 public class ReadWriteController {
 	ReadWriteModel readWrite;

@@ -7,6 +7,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class MenuScreen extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton btnEntry, btnSearch, btnExit;
 	public MenuScreen() {
 		initComponents();

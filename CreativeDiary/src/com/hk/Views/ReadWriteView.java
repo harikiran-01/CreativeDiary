@@ -18,9 +18,6 @@ import com.hk.components.DiaryPage;
 import com.hk.components.FilledIndicator;
 import com.hk.components.StarRater;
 import com.toedter.calendar.JDateChooser;
-
-import core.CDCore;
-
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;

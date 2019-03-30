@@ -1,7 +1,6 @@
 package com.hk.Views;
 
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.util.List;
 
@@ -10,13 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JSeparator;
-import javax.swing.JScrollBar;
 import javax.swing.border.LineBorder;
 
 import com.hk.components.DiaryPage;
