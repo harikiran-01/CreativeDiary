@@ -24,7 +24,7 @@ public class FilledIndicator{
 	    }
 		
 		public List<Date> getDates(){
-			return list.sort(c);;
+			return list;
 		}
 		
 		public void remove(Date date) {
