@@ -4,7 +4,9 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 import com.hk.components.QA;
 
@@ -15,15 +17,20 @@ public class SQAScreen extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private JLabel question;
 	private JTextArea answerField;
+	private JScrollPane answerScroll;
 	
 	public SQAScreen(QA qa) {
 		question = new JLabel(qa.getQuestion());
-		answerField = new JTextArea(2, 30);
+		answerField = new JTextArea();
+		answerField.setLineWrap(true);
+		answerField.setWrapStyleWord(true);
 		answerField.setText(qa.getAnswer());
+		answerScroll = new JScrollPane(answerField,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		answerScroll.setPreferredSize(new Dimension(400, 70));
 		add(question);
-		add(answerField);
+		add(answerScroll);
 		setPreferredSize(new Dimension(500, 70));
-		setMaximumSize(getPreferredSize());		
+		setMaximumSize(getPreferredSize());	
 		setVisible(true);
 	}
 	

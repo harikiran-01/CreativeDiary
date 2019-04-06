@@ -1,23 +1,25 @@
 package com.hk.Views;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
 import com.hk.components.DiaryPage;
-
-import java.awt.Color;
-import java.awt.Dimension;
 
 public class SearchView extends JPanel{
 	
@@ -33,6 +35,15 @@ public class SearchView extends JPanel{
 		addComponents();
 	}
 	
+	Action action = new AbstractAction()
+	{
+	    @Override
+	    public void actionPerformed(ActionEvent e)
+	    {
+	        System.out.println("some action");
+	    }
+	};
+	
 	private void initComponents() {
 		setBounds(166, 0, 628, 575);
 		setLayout(new FlowLayout());
@@ -41,9 +52,11 @@ public class SearchView extends JPanel{
 		//search key field
         searchKey = new JTextField(20);
         searchKey.setBounds(121, 9, 166, 20);
+        searchKey.addActionListener(action);
 		//search button
         searchButton = new JButton("SEARCH");
         searchButton.setBounds(297, 8, 94, 23);
+        searchButton.addActionListener(action);
         //line seperator
         separator = new JSeparator();
 		separator.setBounds(0, 42, 628, 2);
@@ -65,7 +78,6 @@ public class SearchView extends JPanel{
 	}
 	
 	private JPanel resultComponentFactory(DiaryPage page) {
-		System.out.println("sml frame "+page.getDate());
 		resultComponent = new JPanel();
 		resultComponent.setLayout(new BoxLayout(resultComponent, BoxLayout.Y_AXIS));
 		resultComponent.setBorder(new LineBorder(Color.green));
@@ -99,7 +111,8 @@ public class SearchView extends JPanel{
 		searchKey.setText(key);
 	}
 
-	public void performSearchListener(ActionListener search) {
+	public void addSearchListener(Action search) {
+		searchKey.addActionListener(search);
 		searchButton.addActionListener(search);
 	}
 }

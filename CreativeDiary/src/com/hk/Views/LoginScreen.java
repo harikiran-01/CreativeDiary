@@ -1,7 +1,6 @@
 package com.hk.Views;
 
-import java.awt.event.ActionListener;
-
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -53,8 +52,9 @@ public class LoginScreen extends AccessUtilsView{
 		add(status);
 	}
 	
-	public void addLoginListener(ActionListener loginButtonListener) {
-		btnLogin.addActionListener(loginButtonListener);
+	public void addLoginListener(Action login) {
+		passwordField.addActionListener(login);
+		btnLogin.addActionListener(login);
 	}
 	
 }

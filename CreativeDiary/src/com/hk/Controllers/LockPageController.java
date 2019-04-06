@@ -3,6 +3,10 @@ package com.hk.Controllers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
 import com.hk.Models.LoginModel;
 import com.hk.Models.RegisterModel;
 import com.hk.Views.LoginScreen;
@@ -13,27 +17,38 @@ import com.hk.components.UserProfile;
 public class LockPageController {
 	private boolean authentication = false;	
 	
+		
+	
 	public LockPageController(LoginScreen loginView, LoginModel login, RegisterScreen registerView, RegisterModel register) {
 		
-		loginView.addLoginListener(new ActionListener() {		
+		Action action = new AbstractAction()
+		{
+		    /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			public void actionPerformed(ActionEvent e) {
-						if(login.scanStoredUserData()) {
-						login.setCredentials(loginView.getUserName(), new String(loginView.getPasswordField().getPassword()));
-						if(login.doesUserExist()) {
-						authentication = true;
-						CurrentUser.init(login.getCurrentUser());
-					}
-					else {
-						authentication = false;
-						loginView.setStatusFailed();
-					}
-					}
-					else {
-						loginView.setStatusEmpty();
-					}
-			}
-		});
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	if(login.scanStoredUserData()) {
+					login.setCredentials(loginView.getUserName(), new String(loginView.getPasswordField().getPassword()));
+					if(login.doesUserExist()) {
+					authentication = true;
+					CurrentUser.init(login.getCurrentUser());
+				}
+				else {
+					authentication = false;
+					loginView.setStatusFailed();
+				}
+				}
+				else {
+					loginView.setStatusEmpty();
+				}
+		    }
+		};
+		
+		loginView.addLoginListener(action);
 		
 		registerView.addRegisterListener(new ActionListener() {		
 			@Override

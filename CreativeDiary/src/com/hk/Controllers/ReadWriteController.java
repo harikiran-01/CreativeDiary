@@ -84,6 +84,7 @@ public class ReadWriteController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Selected date: "+readWrite.getSelectedDate());
 				if(new File(readWrite.reviseFileName()).delete()) {
 					readWrite.fetchDiaryPage();
 					readWriteScreen.fillScreen(readWrite.getPage());
