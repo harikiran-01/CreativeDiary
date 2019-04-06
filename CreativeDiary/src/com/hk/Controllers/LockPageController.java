@@ -31,6 +31,7 @@ public class LockPageController {
 			@Override
 		    public void actionPerformed(ActionEvent e)
 		    {
+				
 		    	if(login.scanStoredUserData()) {
 					login.setCredentials(loginView.getUserName(), new String(loginView.getPasswordField().getPassword()));
 					if(login.doesUserExist()) {
